@@ -3,4 +3,4 @@
 - Juan Marcos Caicedo - 172
 - Kevin Loaiza - 172
 - Cristian Danilo Pascumal - 172
-- Ricardo Pedreos - 1726375
+- Ricardo Pedreros - 1726375
