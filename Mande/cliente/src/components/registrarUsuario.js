@@ -46,10 +46,18 @@ const RegistrarUsuario = () => {
                 usuario_numero_medio_pago:usuario_numero_medio_pago,
                 usuario_tipo_medio_pago:'1',
                 usuario_foto_recibo:'1'
-
-
             }
             console.log(newUsuario)
+            console.log(JSON.stringify( newUsuario))
+            const response = await fetch("http://localhost:5000/Usuario/Create",{
+                method:"POST",
+                headers:{"Content-Type":"application/json"},
+                
+                body: JSON.stringify( newUsuario)
+                
+            });
+
+            console.log(response);
             
         } catch (err) {
             console.error(err);
