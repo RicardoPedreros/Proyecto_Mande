@@ -25,19 +25,43 @@ app.use(bodyParser.json());
 app.post("/Labor/Create", async (req, res) => {
     try {
         const body = req.body;
-        const schema ={
-            labor_nombre: Joi.string().min(1).max(50).required().regex(/^[^±!@£$%^&*_+§¡€#¢¶•ªº«\\/<>?:;|=.,]{1,50}$/),
-            labor_descripcion: Joi.string().min(1).max(50).required().regex(/^[^±!@£$%^&*_+§¡€#¢¶•ªº«\\/<>?:;|=.,]{1,50}$/)
+        const schema = {
+            labor_nombre: Joi.string(),
+            labor_descripcion: Joi.string()
         }
         const labor_nombre = body.labor_nombre;
         const labor_descripcion = body.labor_descripcion;
 
-        
+
         const newLabor = await pool.query(
             "INSERT INTO labor(labor_nombre,labor_descripcion) VALUES ($1,$2) RETURNING *;",
-            [labor_nombre,labor_descripcion]);
+            [labor_nombre, labor_descripcion]);
 
         res.json(newLabor.rows[0]);
+
+
+    } catch (err) {
+        console.error(err.message);
+
+
+    }
+})
+
+//CREATE AN USUARIO
+app.post("/Usuario/Create", async (req, res) => {
+    try {
+        const body = req.body;
+        
+        const campos = '(usuario_celular,usuario_nombre,usuario_apellido,usuario_latitud,usuario_longitud,usuario_direccion,usuario_foto_recibo,usuario_numero_medio_pago,usuario_tipo_medio_pago,usuario_correo,usuario_documento,usuario_password)'
+        const nombre = body.usuario_nombre, apellido = body.usuario_apellido,correo = body.usuario_correo,celular = body.usuario_celular;
+        const direccion = body.usuario_direccion, documento = body.usuario_documento, password = body.usuario_password,latitud = body.usuario_latitud,longitud = body.usuario_longitud;
+        const pago = body.usuario_numero_medio_pago,tipo = body.usuario_tipo_medio_pago, foto = body.usuario_foto_recibo
+
+        
+        const newUsuario = await pool.query("INSERT INTO usuario" + campos +  " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *;",
+            [celular,nombre,apellido,latitud,longitud,direccion,foto,pago,tipo,correo,documento,password]);
+
+        res.json(newUsuario.rows[0]);
 
 
     } catch (err) {
@@ -82,7 +106,7 @@ app.get("/Labor/:id", async (req, res) => {
 app.put("/Labor/Edit", async (req, res) => {
     try {
         const body = req.body;
-        
+
         const schema = {
             labor_id: Joi.string(),
             labor_n: Joi.string().min(1).max(50).required().regex(/^[^±!@£$%^&*_+§¡€#¢¶•ªº«\\/<>?:;|=.,]{1,50}$/),
