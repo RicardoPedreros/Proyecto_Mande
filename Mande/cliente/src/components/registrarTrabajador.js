@@ -10,7 +10,7 @@ function registrarTrabajador() {
 
             <div class="d-flex justify-content-sm-center">
                 <div class="signup-form-container ">
-                    <form role="form" id="register-form" autocomplete="off">
+                    <form  id="register-form" autocomplete="off">
                         <div class="form-header">
                             <h3 class="form-tittle">
 
@@ -18,7 +18,6 @@ function registrarTrabajador() {
 
                                 Registro Trabajador</h3>
                         </div>
-
                         <div class="form-body">
                             <div class="form-group">
                                 <input name="name" type="text" class="form-control" placeholder="Nombre" />
