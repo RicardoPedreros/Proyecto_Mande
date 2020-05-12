@@ -71,6 +71,31 @@ app.post("/Usuario/Create", async (req, res) => {
     }
 })
 
+//CREATE A TRABAJADOR
+app.post("/Trabajador/Create", async (req, res) => {
+    try {
+        const body = req.body;
+        
+        const campos = '(trabajador_documento,trabajador_nombre,trabajador_apellido,trabajador_latitud,trabajador_longitud,trabajador_direccion,trabajador_foto_documento,trabajador_foto_perfil,trabajador_password)'
+        const nombre = body.trabajador_nombre, apellido = body.trabajador_apellido;
+        const direccion = body.trabajador_direccion, documento = body.trabajador_documento, password = body.trabajador_password,latitud = body.trabajador_latitud,longitud = body.trabajador_longitud;
+        const foto_documento = body.trabajador_foto_documento, foto_perfil = body.trabajador_foto_perfil
+        
+        
+        const newTrabajador = await pool.query("INSERT INTO trabajador" + campos +  " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;",
+            [documento,nombre,apellido,latitud,longitud,direccion,foto_documento,foto_perfil,password]);
+
+        res.json(newTrabajador.rows[0]);
+
+
+    } catch (err) {
+        console.error(err.message);
+
+
+    }
+})
+
+
 //Get all Labores
 
 app.get("/Labor/Listar", async (req, res) => {

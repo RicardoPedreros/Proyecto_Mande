@@ -33,43 +33,43 @@ const RegistrarUsuario = () => {
         try {
             const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2 + " " + usuario_Com + " " + usuario_ciudad + " " + usuario_departamento;
 
-            const newUsuario ={
-                usuario_nombre:usuario_nombre,
-                usuario_apellido:usuario_apellido,
-                usuario_correo:usuario_correo,
-                usuario_celular:usuario_celular,
-                usuario_direccion:usuario_direccion,
-                usuario_documento:usuario_documento,
-                usuario_password:usuario_password1,
-                usuario_latitud:LatLng.lat,
-                usuario_longitud:LatLng.lng,
-                usuario_numero_medio_pago:usuario_numero_medio_pago,
-                usuario_tipo_medio_pago:'1',
-                usuario_foto_recibo:'1'
+            const newUsuario = {
+                usuario_nombre: usuario_nombre,
+                usuario_apellido: usuario_apellido,
+                usuario_correo: usuario_correo,
+                usuario_celular: usuario_celular,
+                usuario_direccion: usuario_direccion,
+                usuario_documento: usuario_documento,
+                usuario_password: usuario_password1,
+                usuario_latitud: LatLng.lat,
+                usuario_longitud: LatLng.lng,
+                usuario_numero_medio_pago: usuario_numero_medio_pago,
+                usuario_tipo_medio_pago: '1',
+                usuario_foto_recibo: '1'
             }
             console.log(newUsuario)
-            console.log(JSON.stringify( newUsuario))
-            const response = await fetch("http://localhost:5000/Usuario/Create",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                
-                body: JSON.stringify( newUsuario)
-                
+            console.log(JSON.stringify(newUsuario))
+            const response = await fetch("http://localhost:5000/Usuario/Create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+
+                body: JSON.stringify(newUsuario)
+
             });
 
             console.log(response);
-            
+
         } catch (err) {
             console.error(err);
-            
-            
+
+
         }
 
     }
     const getLatLng = async e => {
 
         e.preventDefault();
-      
+
         const direccion_formato = usuario_Dir2 + ",+" + usuario_Car + "+" + usuario_CarN + ",+" + usuario_Com + ",+" + usuario_ciudad + ",+" + usuario_departamento;
         const AP_KEY = 'AIzaSyDujuj4Ia2VIkcFVPFAajuUPLOmeVm4zUg';
 
@@ -87,12 +87,18 @@ const RegistrarUsuario = () => {
     }
 
     return <Fragment>
-        <div className="shadow-lg p-3 mb-5 bg-white rounded"></div>
+        <div className="shadow-lg p-3 mb-5 bg-white rounded">
+
+
+
+
+
+        </div>
 
 
         <div className="card ">
             <div className="d-flex justify-content-sm-center">
-                <form className="d-flex mt-5" onSubmit={onSubmmitForm} >
+                <form className="d-flex mt-5"  >
 
                     <div className="form-header">
 
@@ -141,8 +147,9 @@ const RegistrarUsuario = () => {
 
                         <div className="form-group">
 
-
                         </div>
+
+
                         <div className="form-group">
                             <div className="form-row">
                                 <div className="form-group col-md-4">
@@ -206,16 +213,16 @@ const RegistrarUsuario = () => {
                                     />
                                 </div>
 
-                                
+
                                 <div className="form-group col-md-2">
-                                <label data-toggle="tooltip" title="Es obligatorio que genere su latitud y longitud">
-                                                <h8>importante <i className="fa fa-question-circle d-inline"></i></h8>
-                                            </label>
-                                    <button  className="btn btn-primary"
+                                    <label data-toggle="tooltip" title="Es obligatorio que genere su latitud y longitud">
+                                        <h8>importante <i className="fa fa-question-circle d-inline"></i></h8>
+                                    </label>
+                                    <button className="btn btn-primary"
                                         onClick={e => getLatLng(e)} >
                                         Obtener
                                     </button>
-                                    </div>
+                                </div>
 
 
 
@@ -302,7 +309,7 @@ const RegistrarUsuario = () => {
                                 <div className="form-group col-md-12">
                                     <label>Numero tarjeta</label>
                                     <input id="ccn" type="credit-card" inputMode="numeric" className="form-control" pattern="[0-9\s]{13,19}" maxLength="19"
-                                    onChange={e => setUsuarioTarjeta(e.target.value.replace(' ', '+'))} />
+                                        onChange={e => setUsuarioTarjeta(e.target.value.replace(' ', '+'))} />
 
 
                                 </div>
