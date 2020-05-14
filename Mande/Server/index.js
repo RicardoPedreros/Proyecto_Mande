@@ -96,6 +96,24 @@ app.post("/Trabajador/Create", async (req, res) => {
 })
 
 
+//Get all Trabajadores
+
+app.get("/Trabajador/Listar", async (req, res) => {
+    try {
+
+        const allTrabajadores = await pool.query("SELECT *  FROM trabajador");
+        res.json(allTrabajadores.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+
+
+    }
+
+})
+
+
 //Get all Labores
 
 app.get("/Labor/Listar", async (req, res) => {

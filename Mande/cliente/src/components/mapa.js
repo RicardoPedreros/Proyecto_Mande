@@ -11,32 +11,78 @@ import {
 
 function Map () {
 
+    const [trabajadores, setTrabajadores] = useState([]);
+    const [selectedTrabajador, setSelectedTrabajador] = useState(null);
+
+
+    const getTrabajadores = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/Trabajador/Listar");
+
+
+            const jsonData = await response.json();
+
+
+            setTrabajadores(jsonData);
+
+        } catch (err) {
+            console.error(err.message)
+
+        }
+    };
+    
+    useEffect(() => {
+       getTrabajadores();
+    }, []);
+    
+  
+
   return (
    <GoogleMap
-      defaultZoom={13}
-      defaultCenter={{ lat: 3.452980,
-                       lng: -76.518784 }}
-     >                  
-      <Marker     
-        position={{ lat: 3.376173, 
-                     lng: -76.533501
-          }}/> 
+      defaultZoom={12}
+      defaultCenter={{ lat: 3.418156,
+                       lng: -76.526865 }}
+     >    
+           
 
 
-<InfoWindow
-          onCloseClick={() => {
-            
+
+     {trabajadores.map(trabajador => (   
+       
+      <Marker    
+        key = {trabajador.trabajador_documento}
+        position={{ lat:  parseFloat(trabajador.trabajador_latitud),
+                    lng:  parseFloat(trabajador.trabajador_longitud)
+        }}
+        onClick={() => {
+            setSelectedTrabajador(trabajador);
           }}
+          icon={{
+            url: `/trabajador.png`,
+            scaledSize: new window.google.maps.Size(35, 35)
+          }}
+                     />
+
+                     ))}
+     
+      {selectedTrabajador && 
+        <InfoWindow
           position={{
-            lat: 3.376173, 
-            lng: -76.533501
+            lat:  parseFloat(selectedTrabajador.trabajador_latitud),
+            lng:  parseFloat(selectedTrabajador.trabajador_longitud)
+          }}
+          onCloseClick={() => {
+            setSelectedTrabajador(null);
           }}
         >
           <div>
-            <h2> Univalle</h2>
-            <p> tamo bien  </p>
+          <h5>Trabajador</h5>
+        <p> Nombre: {selectedTrabajador.trabajador_nombre}</p>
           </div>
         </InfoWindow>
+    }
+ 
+   
 
 
 
@@ -55,6 +101,7 @@ const ApiKey = 'AIzaSyBlrsTG-2asIIFS1wzn1UmPcaEn_MaStyo' ;
 export default function Mapa() {
   return (
     <div style={{ width: "75vw", height: "90vh" }}>
+        MAPA MANDE 
       <MapWrapped
             googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
             loadingElement={<p>   Cargando </p>}
