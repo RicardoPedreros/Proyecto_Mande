@@ -71,6 +71,26 @@ app.post("/Usuario/Create", async (req, res) => {
     }
 })
 
+
+//Get all Usuarios
+
+app.get("/Usuario/Listar", async (req, res) => {
+    try {
+
+        const allUsuarios = await pool.query("SELECT *  FROM usuario");
+        res.json(allUsuarios.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+
+
+    }
+
+})
+
+
+
 //CREATE A TRABAJADOR
 app.post("/Trabajador/Create", async (req, res) => {
     try {

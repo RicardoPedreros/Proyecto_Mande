@@ -14,6 +14,9 @@ function Map () {
     const [trabajadores, setTrabajadores] = useState([]);
     const [selectedTrabajador, setSelectedTrabajador] = useState(null);
 
+    const [usuarios, setUsuarios] = useState([]);
+    const [selectedUsuario, setSelectedUsuario] = useState(null);
+
 
     const getTrabajadores = async () => {
         try {
@@ -31,9 +34,28 @@ function Map () {
         }
     };
     
-    useEffect(() => {
-       getTrabajadores();
-    }, []);
+ 
+
+    const getUsuarios = async () => {
+      try {
+          const response = await fetch("http://localhost:5000/Usuario/Listar");
+
+
+          const jsonData = await response.json();
+
+
+          setUsuarios(jsonData);
+
+      } catch (err) {
+          console.error(err.message)
+
+      }
+  };
+  
+  useEffect(() => {
+     getUsuarios ();
+     getTrabajadores(); 
+  }, []);
     
   
 
@@ -56,6 +78,7 @@ function Map () {
         }}
         onClick={() => {
             setSelectedTrabajador(trabajador);
+            setSelectedUsuario(null);
           }}
           icon={{
             url: `/trabajador.png`,
@@ -64,6 +87,29 @@ function Map () {
                      />
 
                      ))}
+
+
+    {usuarios.map(usuario => (   
+       
+       <Marker    
+         key = {usuario.usuario_documento}
+         position={{ lat:  parseFloat(usuario.usuario_latitud),
+                     lng:  parseFloat(usuario.usuario_longitud)
+         }}
+         onClick={() => {
+             setSelectedUsuario(usuario);
+             setSelectedTrabajador(null);
+           }}
+           icon={{
+             url: `/usuario.png`,
+            scaledSize: new window.google.maps.Size(25, 30)
+           }}
+
+                      />
+ 
+                      ))}
+
+
      
       {selectedTrabajador && 
         <InfoWindow
@@ -73,6 +119,7 @@ function Map () {
           }}
           onCloseClick={() => {
             setSelectedTrabajador(null);
+            
           }}
         >
           <div>
@@ -80,7 +127,27 @@ function Map () {
         <p> Nombre: {selectedTrabajador.trabajador_nombre}</p>
           </div>
         </InfoWindow>
+}
+
+
+{selectedUsuario && 
+  <InfoWindow
+    position={{
+        lat:  parseFloat(selectedUsuario.usuario_latitud),
+        lng:  parseFloat(selectedUsuario.usuario_longitud)
+    }}
+    onCloseClick={() => {
+      setSelectedUsuario(null);
+      
+    }}
+  >
+    <div>
+    <h5>Usuario</h5>
+  <p> Nombre: {selectedUsuario.usuario_nombre}</p>
+    </div>
+  </InfoWindow>
     }
+    
  
    
 

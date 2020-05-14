@@ -8,6 +8,7 @@ const Routes = () =>{
    return(
        <Switch>
            <Route exact path= '/' component= {RegistrarTrabajador} />
+           <Route exact path= '/registrarusuario' component= {registrarUsuario} />
            
            <Route exact path= '/mapa' component= {Mapa} />
 
