@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 
 
 //Routes
-
+app.use('/Autenticar',require('./jwt'))
 
 //Create a Labor
 
