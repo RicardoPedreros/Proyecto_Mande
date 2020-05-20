@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  withGoogleMap,
-  withScriptjs,
-  GoogleMap,
-  Marker,
-  InfoWindow
-} from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker,InfoWindow } from "react-google-maps"
 
 
+function Mapacomponente () {
 
-function Map () {
+ 
+const MyMapComponent = withScriptjs(withGoogleMap(
+    function Map () {
 
     const [trabajadores, setTrabajadores] = useState([]);
     const [selectedTrabajador, setSelectedTrabajador] = useState(null);
@@ -153,24 +150,28 @@ function Map () {
     </GoogleMap>
 
   );
-}
-
-
-const MapWrapped = withScriptjs(withGoogleMap(Map));
+})) 
 
 const ApiKey = 'AIzaSyBlrsTG-2asIIFS1wzn1UmPcaEn_MaStyo' ;
-//paga const ApiKey = 'AIzaSyDeWYga8MF48Ahi8C8Ip1kkqxZ5143Tihg'
 
-export default function Mapa() {
-  return (
-    <div style={{ width: "75vw", height: "90vh" }}>
-         <h1 className="form-tittle"> Mapa Mande</h1>
-      <MapWrapped
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
-            loadingElement={<p>   Cargando </p>}
-            containerElement={<div style={{ height: `400px` }} />}
-            mapElement={<div style={{ height: `100%` }} />}
-      />
+
+return (
+  <div >
+      <div class="bg-dark text-white text-center">
+  <h1 class="text-white">Mapa Mande </h1>
+  <h2 class="text-primary">  - </h2>
     </div>
-  );
+    <div style={{ width: "70vw", height: "90vh" }}>  
+<MyMapComponent
+  googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
+  loadingElement={<div style={{ height: `100%` }} />}
+  containerElement={<div style={{ height: `400px` }} />}
+  mapElement={<div style={{ height: `100%` }} />}
+/>
+</div>
+</div>
+)
+
 }
+
+export default Mapacomponente;

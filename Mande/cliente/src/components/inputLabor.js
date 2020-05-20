@@ -21,7 +21,7 @@ const InputLaborNombre = () => {
                 
             });
             console.log(response);
-
+            
         } catch (err) {
             console.error(err.message);
             
