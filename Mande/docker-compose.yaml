@@ -1,0 +1,15 @@
+version: "3"
+
+services: 
+    frontend:
+        build: /home/marcos/Proyecto_Mande/Mande/cliente
+        ports:
+            - "3000:3000"
+        environment: 
+            CI: "true"
+        depends_on: 
+            - backend
+    backend:
+        build: /home/marcos/Proyecto_Mande/Mande/Server
+        ports:
+            - "5000:5000"
