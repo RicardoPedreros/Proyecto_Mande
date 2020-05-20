@@ -1,25 +1,22 @@
 import React, { Fragment, useState } from "react";
+import {toast} from 'react-toastify';
 
 
-
-function RegistrarTrabajador() {
+function RegistrarTrabajador({setAutTrabajador}) {
 
     const [trabajador_nombre, setTrabajadorNombre] = useState("")
     const [trabajador_apellido, setTrabajadorApellido] = useState("")
     const [trabajador_documento, setTrabajadorDocumento] = useState("")
     const [trabajador_password1, setTrabajadorPassword1] = useState("")
-    const [trabajador_password2, setTrabajadorPassword2] = useState("")
-    const [trabajador_latitud, setTrabajadorLatitud] = useState("");
-    const [trabajador_longitud, setTrabajadorLongitud] = useState("");
+    //const [trabajador_password2, setTrabajadorPassword2] = useState("")
     const [trabajador_Car, setTrabajadorCar] = useState("")
     const [trabajador_CarN, setTrabajadorCarN] = useState("")
     const [trabajador_Dir2, setTrabajadorDir2] = useState("")
     const [trabajador_Com, setTrabajadorCom] = useState("")
     const [trabajador_ciudad, setTrabajadorCiudad] = useState("")
     const [trabajador_departamento, setTrabajadorDepartamento] = useState("")
-    const [trabajador_foto_perfil, SetTrabajadorFoto] = useState("")
+    //const [trabajador_foto_perfil, SetTrabajadorFoto] = useState("")
     const [LatLng, setLatLng] = useState("");
-    const [trabajador_numero_medio_pago, setTrabajadorTarjeta] = useState("")
 
     const onSubmmitForm = async e => {
 
@@ -37,26 +34,35 @@ function RegistrarTrabajador() {
                 trabajador_latitud: LatLng.lat,
                 trabajador_longitud: LatLng.lng,
                 trabajador_foto_documento: '1',
-                trabajador_foto_perfil: trabajador_foto_perfil
+                trabajador_foto_perfil: '1'//trabajador_foto_perfil
             }
-            console.log(newTrabajador)
             console.log(JSON.stringify(newTrabajador))
-            const response = await fetch("http://localhost:5000/Trabajador/Create", {
+            const response = await fetch("http://localhost:5000/Autenticar/RegistrarTrabajador", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
 
                 body: JSON.stringify(newTrabajador)
 
             });
+            const parseRes = await response.json();
 
-            console.log(response);
+            if(parseRes.token){
+                localStorage.setItem('tokenTrabajador', parseRes.token);
+                setAutTrabajador(true);
+                toast.success('Registro exitoso')
+
+            }
+            else {
+                
+            }
+            
 
         } catch (err) {
+            toast.error('Error: Este documento ya se encuentra registrado')
             console.error(err);
 
 
         }
-
     }
 
 
@@ -70,8 +76,6 @@ function RegistrarTrabajador() {
         try {
             const response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + direccion_formato + '&key=' + AP_KEY);
             const data = await response.json();
-            const Latitud = data.results[0].geometry.location.lat
-            const Longitud = data.results[0].geometry.location.lng
             setLatLng(data.results[0].geometry.location);
         } catch (err) {
             console.error(err);
@@ -127,7 +131,7 @@ function RegistrarTrabajador() {
                         </div>
 
                         <div className="form-group">
-                            <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña" onChange={e => setTrabajadorPassword2(e.target.value)}
+                            <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña" /* onChange={e => setTrabajadorPassword2(e.target.value)}*/
                             />
                         </div>
 

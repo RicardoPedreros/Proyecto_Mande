@@ -16,7 +16,7 @@ const ListLabores = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             })
-
+            console.log(deleteLabor)
             setLabores(Labores.filter(labor => labor.labor_id !== id))
         } catch ({ err }) {
             console.error(err);

@@ -1,21 +1,19 @@
 import React, { Fragment, useState } from "react";
+import { Link } from 'react-router-dom';
+import {toast} from 'react-toastify';
 
 
 
 
-
-
-const RegistrarUsuario = () => {
-
+const RegistrarUsuario = ({ setAutUsuario }) => {
+    
     const [usuario_nombre, setUsuarioNombre] = useState("")
     const [usuario_apellido, setUsuarioApellido] = useState("")
     const [usuario_correo, setUsuarioCorreo] = useState("")
     const [usuario_celular, setUsuarioCelular] = useState("")
     const [usuario_documento, setUsuarioDocumento] = useState("")
     const [usuario_password1, setUsuarioPassword1] = useState("")
-    const [usuario_password2, setUsuarioPassword2] = useState("")
-    const [usuario_latitud, setUsuarioLatitud] = useState("");
-    const [usuario_longitud, setUsuarioLongitud] = useState("");
+    //const [usuario_password2, setUsuarioPassword2] = useState("")
     const [usuario_Car, setUsuarioCar] = useState("")
     const [usuario_CarN, setUsuarioCarN] = useState("")
     const [usuario_Dir2, setUsuarioDir2] = useState("")
@@ -47,19 +45,28 @@ const RegistrarUsuario = () => {
                 usuario_tipo_medio_pago: '1',
                 usuario_foto_recibo: '1'
             }
-            console.log(newUsuario)
-            console.log(JSON.stringify(newUsuario))
-            const response = await fetch("http://localhost:5000/Usuario/Create", {
+            const response = await fetch("http://localhost:5000/Autenticar/RegistrarUsuario", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
 
                 body: JSON.stringify(newUsuario)
-
             });
 
-            console.log(response);
+            const parseRes = await response.json();
+
+            if(parseRes.token){
+                localStorage.setItem('tokenUsuario', parseRes.token);
+                setAutUsuario(true);
+                toast.success('Registro exitoso')
+
+            }
+            else {
+                
+            }
+            
 
         } catch (err) {
+            toast.error('Error: Este celular ya se encuentra registrado')
             console.error(err);
 
 
@@ -76,8 +83,6 @@ const RegistrarUsuario = () => {
         try {
             const response = await fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + direccion_formato + '&key=' + AP_KEY);
             const data = await response.json();
-            const Latitud = data.results[0].geometry.location.lat
-            const Longitud = data.results[0].geometry.location.lng
             setLatLng(data.results[0].geometry.location);
         } catch (err) {
             console.error(err);
@@ -140,7 +145,7 @@ const RegistrarUsuario = () => {
 
                         <div className="form-group">
                             <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña"
-                                onChange={e => setUsuarioPassword2(e.target.value)} />
+                                /*onChange={e => setUsuarioPassword2(e.target.value)}*/ />
                         </div>
 
 
@@ -262,10 +267,17 @@ const RegistrarUsuario = () => {
                                 </div>
                             </div>
                             <div className="form-row">
-                                <div className="col text-center"  >
+                                <div className="col text-center mt-2"  >
                                     <button type="button" className="btn btn-primary" onClick={onSubmmitForm}>
                                         Registrarse </button>
                                 </div>
+                            </div>
+                            <div className="form-row">
+
+                                <div className="col text-center mt-2"  >
+                                    <Link to="/loginUsuario"> Ya tiene cuenta? Ingrese aquí</Link>
+                                </div>
+
                             </div>
 
 
