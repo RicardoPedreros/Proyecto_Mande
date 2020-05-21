@@ -6,10 +6,7 @@
 -- ***********************************************************************************
 -- ****************************BASE DE DATOS MANDE V3**********************************
 
-DROP TRIGGER IF EXISTS tr_actualizar_usuario ON Usuario;
-DROP TRIGGER IF EXISTS tr_insertar_usuario ON Usuario;
-DROP TRIGGER IF EXISTS tr_actualizar_trabajador ON Trabajador;
-DROP TRIGGER IF EXISTS tr_insertar_trabajador ON Trabajador;
+
 DROP TRIGGER IF EXISTS tr_actualizar_punto_geografico ON Punto_Geografico;
 DROP TRIGGER IF EXISTS tr_insertar_punto_geografico ON Punto_Geografico;
 DROP TRIGGER IF EXISTS tr_codificar_servicio ON Servicio;
@@ -18,13 +15,9 @@ DROP TRIGGER IF EXISTS tr_codificar_labor ON Labor;
 DROP FUNCTION IF EXISTS buscar_trabajadores; -- NO TIENE TR
 DROP FUNCTION IF EXISTS modificar_usuario; -- NO TIENE TR
 DROP FUNCTION IF EXISTS agregar_usuario; -- NO TIENE TR
-DROP FUNCTION IF EXISTS actualizar_usuario;
-DROP FUNCTION IF EXISTS insertar_usuario;
 DROP FUNCTION IF EXISTS modificar_trabajador; -- NO TIENE TR
 DROP FUNCTION IF EXISTS agregar_trabajador; -- NO TIENE TR
 DROP FUNCTION IF EXISTS confirmar_ubicacion; -- NO TIENE TR
-DROP FUNCTION IF EXISTS actualizar_trabajador;
-DROP FUNCTION IF EXISTS insertar_trabajador;
 DROP FUNCTION IF EXISTS actualizar_punto_geografico;
 DROP FUNCTION IF EXISTS insertar_punto_geografico;
 DROP FUNCTION IF EXISTS codificar_servicio;
@@ -79,7 +72,7 @@ CREATE TABLE Trabajador(
 	trabajador_foto_perfil 		VARCHAR(60)				NOT NULL,
 	trabajador_ocupado 			BOOLEAN					DEFAULT FALSE,
 	trabajador_validado 		BOOLEAN 				DEFAULT TRUE,
-	trabajador_password 		VARCHAR(32)				NOT NULL,
+	trabajador_password 		VARCHAR(255)				NOT NULL,
 	trabajador_reputacion		DECIMAL(2,1)			DEFAULT 0,
 	CONSTRAINT pk_trabajador PRIMARY KEY (trabajador_documento),
 	CONSTRAINT fk_trabajador FOREIGN KEY (trabajador_latitud,trabajador_longitud) 
@@ -112,7 +105,7 @@ CREATE TABLE Usuario(
 	usuario_correo 				VARCHAR(60) 			NOT NULL,
 	usuario_documento 			VARCHAR(20) 			NOT NULL,
 	usuario_validado 			BOOLEAN 				DEFAULT TRUE,
-	usuario_password 			VARCHAR(32)				NOT NULL,
+	usuario_password 			VARCHAR(255)				NOT NULL,
 	CONSTRAINT pk_usuario PRIMARY KEY (usuario_celular),
 	CONSTRAINT fk_usuario FOREIGN KEY (usuario_latitud,usuario_longitud) 
 		REFERENCES Punto_Geografico(pg_latitud,pg_longitud) ON UPDATE CASCADE ON DELETE RESTRICT
@@ -206,32 +199,6 @@ ON Punto_Geografico FOR EACH ROW
 EXECUTE PROCEDURE actualizar_punto_geografico();
 
 
-CREATE FUNCTION insertar_trabajador() RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-	NEW.trabajador_password := MD5(NEW.trabajador_password);
-	RETURN NEW;
-END
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_insertar_trabajador BEFORE INSERT 
-ON Trabajador FOR EACH ROW 
-EXECUTE PROCEDURE insertar_trabajador();
-
-
-CREATE FUNCTION actualizar_trabajador() RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-	IF (NEW.trabajador_password != OLD.trabajador_password) THEN
-		NEW.trabajador_password := MD5(NEW.trabajador_password);
-	END IF;
-	RETURN NEW;
-END
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_actualizar_trabajador BEFORE UPDATE 
-ON Trabajador FOR EACH ROW 
-EXECUTE PROCEDURE actualizar_trabajador();
 
 
 CREATE FUNCTION confirmar_ubicacion(lat DECIMAL, long DECIMAL) RETURNS BOOLEAN AS $$
@@ -293,32 +260,6 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE FUNCTION insertar_usuario() RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-	NEW.usuario_password := MD5(NEW.usuario_password);
-	RETURN NEW;
-END
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_insertar_usuario BEFORE INSERT 
-ON Usuario FOR EACH ROW 
-EXECUTE PROCEDURE insertar_usuario();
-
-
-CREATE FUNCTION actualizar_usuario() RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-	IF (NEW.usuario_password != OLD.usuario_password) THEN
-		NEW.usuario_password := MD5(NEW.usuario_password);
-	END IF;
-	RETURN NEW;
-END
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_actualizar_usuario BEFORE UPDATE 
-ON Usuario FOR EACH ROW 
-EXECUTE PROCEDURE actualizar_usuario();
 
 
 -- Funcion encargada de insertar un usuario y generar una nueva ubicacion si se ingresa una latitud y/o
