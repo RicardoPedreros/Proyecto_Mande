@@ -29,21 +29,25 @@ const RegistrarUsuario = ({ setAutUsuario }) => {
         e.preventDefault();
 
         try {
-            const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2 + " " + usuario_Com + " " + usuario_ciudad + " " + usuario_departamento;
+            const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2 ;
 
             const newUsuario = {
+
+                usuario_celular: usuario_celular,
                 usuario_nombre: usuario_nombre,
                 usuario_apellido: usuario_apellido,
+                usuario_foto_recibo: '1',
+                usuario_numero_medio_pago: usuario_numero_medio_pago,
+                usuario_tipo_medio_pago: '1',
                 usuario_correo: usuario_correo,
-                usuario_celular: usuario_celular,
-                usuario_direccion: usuario_direccion,
                 usuario_documento: usuario_documento,
                 usuario_password: usuario_password1,
                 usuario_latitud: LatLng.lat,
                 usuario_longitud: LatLng.lng,
-                usuario_numero_medio_pago: usuario_numero_medio_pago,
-                usuario_tipo_medio_pago: '1',
-                usuario_foto_recibo: '1'
+                usuario_ciudad: usuario_ciudad,
+                usuario_comuna: usuario_Com,
+                usuario_direccion : usuario_direccion
+                
             }
             const response = await fetch("http://localhost:5000/Autenticar/RegistrarUsuario", {
                 method: "POST",
