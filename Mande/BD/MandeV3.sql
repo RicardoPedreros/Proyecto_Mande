@@ -203,11 +203,14 @@ EXECUTE PROCEDURE actualizar_punto_geografico();
 
 CREATE FUNCTION confirmar_ubicacion(lat DECIMAL, long DECIMAL) RETURNS BOOLEAN AS $$
 DECLARE
+lat_recortada DECIMAL; long_recortada DECIMAL;
 cant INT;
 res BOOLEAN;
 BEGIN
+	lat_recortada := ROUND(lat,6);
+	long_recortada := ROUND(long,6);
 	res := TRUE;
-	SELECT COUNT(*) INTO cant FROM Punto_Geografico WHERE pg_latitud=lat AND pg_longitud=long;
+	SELECT COUNT(*) INTO cant FROM Punto_Geografico WHERE pg_latitud=lat_recortada AND pg_longitud=long_recortada;
 	IF (cant = 0) THEN
 		res := FALSE;
 	END IF;

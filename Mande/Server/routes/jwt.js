@@ -27,9 +27,11 @@ router.get("/MostrarInscritas", autorizacionUsuario, async (req, res) => {
 //Registro Usuario
 router.post('/RegistrarUsuario', validacion, async (req, res) => {
     try {
+        console.log(req.body);
+        
 
         const body = req.body;
-
+        
 
 
         const nombre = body.usuario_nombre, apellido = body.usuario_apellido, correo = body.usuario_correo, celular = body.usuario_celular, comuna = body.usuario_comuna, ciudad = body.usuario_ciudad;
@@ -50,14 +52,16 @@ router.post('/RegistrarUsuario', validacion, async (req, res) => {
 
         /////////////////////////////////////////
 
-        const newUsuario = await pool.query("SELECT agregar_usuario ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) ;",
-            [celular, nombre, apellido, foto, pago, tipo, correo, documento, bcryptpassword, latitud, longitud, ciudad,comuna,direccion]);
+        const newUsuario = await pool.query("SELECT agregar_usuario($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) ;",
+            [celular, nombre, apellido, foto, pago, tipo, correo, documento, bcryptpassword, latitud, longitud, ciudad, comuna, direccion]);
 
 
         ////////////////////////////////////////////
-
-        const token = jwtGeneratorUsuario(newUsuario.rows[0].usuario_celular)
-        return res.json({ token });
+        const seRegistro = newUsuario.rows[0].agregar_usuario
+        if (seRegistro) {
+            const token = jwtGeneratorUsuario(newUsuario.rows[0].usuario_celular)
+            return res.json({token});
+        }
 
     } catch (err) {
         console.error(err);
@@ -93,7 +97,7 @@ router.post('/RegistrarTrabajador', async (req, res) => {
         /////////////////////////////////////////
 
         const token = jwtGeneratorTrabajador(newTrabajador.rows[0].trabajador_documento)
-        return res.json({token});
+        return res.json({ token });
 
 
     } catch (error) {

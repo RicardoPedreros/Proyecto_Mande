@@ -49,6 +49,8 @@ const RegistrarUsuario = ({ setAutUsuario }) => {
                 usuario_direccion : usuario_direccion
                 
             }
+            console.log(JSON.stringify(newUsuario));
+            
             const response = await fetch("http://localhost:5000/Autenticar/RegistrarUsuario", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
