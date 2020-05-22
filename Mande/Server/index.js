@@ -134,7 +134,7 @@ app.get("/Labor/Listar", async (req, res) => {
 app.get("/Labor/ListarInscritas", async (req, res) => {
     try {
 
-        const allLabores = await pool.query("SELECT labor_id,labor_nombre,labor_descripcion FROM labor natural join trabajadores_realizan_labores" );
+        const allLabores = await pool.query("SELECT * FROM Labor_Disponible");
         res.json(allLabores.rows);
 
     } catch (err) {

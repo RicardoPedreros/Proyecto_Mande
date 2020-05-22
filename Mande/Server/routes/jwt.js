@@ -27,7 +27,6 @@ router.get("/MostrarInscritas", autorizacionUsuario, async (req, res) => {
 //Registro Usuario
 router.post('/RegistrarUsuario', validacion, async (req, res) => {
     try {
-        console.log(req.body);
         
 
         const body = req.body;
@@ -59,8 +58,8 @@ router.post('/RegistrarUsuario', validacion, async (req, res) => {
         ////////////////////////////////////////////
         const seRegistro = newUsuario.rows[0].agregar_usuario
         if (seRegistro) {
-            const token = jwtGeneratorUsuario(newUsuario.rows[0].usuario_celular)
-            return res.json({token});
+            const token = jwtGeneratorUsuario(celular);
+            res.json({token});
         }
 
     } catch (err) {
@@ -69,44 +68,6 @@ router.post('/RegistrarUsuario', validacion, async (req, res) => {
 
     }
 })
-
-//Registro Trabajador
-router.post('/RegistrarTrabajador', async (req, res) => {
-    try {
-
-        const body = req.body;
-
-        const campos = '(trabajador_documento,trabajador_nombre,trabajador_apellido,trabajador_latitud,trabajador_longitud,trabajador_direccion,trabajador_foto_documento,trabajador_foto_perfil,trabajador_password)'
-        const nombre = body.trabajador_nombre, apellido = body.trabajador_apellido;
-        const direccion = body.trabajador_direccion, documento = body.trabajador_documento, password = body.trabajador_password, latitud = body.trabajador_latitud, longitud = body.trabajador_longitud;
-        const foto_documento = body.trabajador_foto_documento, foto_perfil = body.trabajador_foto_perfil
-        /////////////////////////////////////////////////////////////
-        const response = await pool.query('SELECT * FROM trabajador WHERE trabajador_documento = $1', [documento])
-        if (response.rows.length !== 0) {
-            return res.status(401).send('Ya existe el trabajador')
-        }
-
-        const saltRounds = 10;
-        const Salt = await bcrypt.genSalt(saltRounds)
-        const bcryptpassword = await bcrypt.hash(password, Salt);
-
-        /////////////////////////////////////////
-        const newTrabajador = await pool.query("INSERT INTO trabajador" + campos + " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *;",
-            [documento, nombre, apellido, latitud, longitud, direccion, foto_documento, foto_perfil, bcryptpassword]);
-
-        /////////////////////////////////////////
-
-        const token = jwtGeneratorTrabajador(newTrabajador.rows[0].trabajador_documento)
-        return res.json({ token });
-
-
-    } catch (error) {
-        console.error(error);
-
-    }
-})
-
-
 ////////////////////////////////////Login///////////////////////
 
 
@@ -132,7 +93,6 @@ router.post('/LoginUsuario', async (req, res) => {
         }
 
         const token = jwtGeneratorUsuario(usuario.rows[0].usuario_celular)
-
         res.json({ token })
 
     } catch (err) {
@@ -144,6 +104,50 @@ router.post('/LoginUsuario', async (req, res) => {
 })
 
 ///////////////////////////////////////////
+
+
+//Registro Trabajador
+router.post('/RegistrarTrabajador', async (req, res) => {
+    try {
+
+        const body = req.body;
+        const nombre = body.trabajador_nombre, apellido = body.trabajador_apellido, comuna = body.trabajador_comuna, ciudad = body.trabajador_ciudad;
+        const direccion = body.trabajador_direccion, documento = body.trabajador_documento, password = body.trabajador_password, latitud = body.trabajador_latitud, longitud = body.trabajador_longitud;
+        const foto_documento = body.trabajador_foto_documento, foto_perfil = body.trabajador_foto_perfil
+        /////////////////////////////////////////////////////////////
+        const response = await pool.query('SELECT * FROM trabajador WHERE trabajador_documento = $1', [documento])
+        if (response.rows.length !== 0) {
+            return res.status(401).send('Ya existe el trabajador')
+        }
+
+        const saltRounds = 10;
+        const Salt = await bcrypt.genSalt(saltRounds)
+        const bcryptpassword = await bcrypt.hash(password, Salt);
+
+        /////////////////////////////////////////
+        const newTrabajador = await pool.query("SELECT agregar_trabajador($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);",
+            [documento, nombre, apellido, foto_documento, foto_perfil, bcryptpassword, latitud, longitud, ciudad,comuna,direccion]);
+
+        /////////////////////////////////////////
+
+        const seRegistro = newTrabajador.rows[0].agregar_trabajador
+        console.log(newTrabajador.rows[0]);
+        
+        if (seRegistro) {
+            const token = jwtGeneratorTrabajador(documento);
+            console.log({token});
+            
+            res.json({token});
+        }
+
+
+    } catch (error) {
+        console.error(error);
+
+    }
+})
+
+
 
 
 ////////////////////////////////////Login///////////////////////
