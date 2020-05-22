@@ -67,6 +67,7 @@ const MostrarTrabajos = () => {
                             <Link to="/SeleccionarTrabajador"><h3 className="card-title text-uppercase text-primary" > {labor.labor_nombre} </h3> </Link>
                                 
                                 <p className="m-2">{labor.labor_descripcion}</p>
+                                <p className="m-2">{labor.cantidad_trabajadores}</p>
 
                             </div>
                         </div>

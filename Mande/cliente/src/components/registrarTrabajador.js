@@ -23,18 +23,20 @@ function RegistrarTrabajador({setAutTrabajador}) {
         e.preventDefault();
 
         try {
-            const trabajador_direccion = trabajador_Car + " " + trabajador_CarN + " " + trabajador_Dir2 + " " + trabajador_Com + " " + trabajador_ciudad + " " + trabajador_departamento;
+            const trabajador_direccion = trabajador_Car + " " + trabajador_CarN + " " + trabajador_Dir2;
 
             const newTrabajador = {
+                trabajador_documento: trabajador_documento,
                 trabajador_nombre: trabajador_nombre,
                 trabajador_apellido: trabajador_apellido,
-                trabajador_direccion: trabajador_direccion,
-                trabajador_documento: trabajador_documento,
+                trabajador_foto_documento: '1',
+                trabajador_foto_perfil: '1',
                 trabajador_password: trabajador_password1,
                 trabajador_latitud: LatLng.lat,
                 trabajador_longitud: LatLng.lng,
-                trabajador_foto_documento: '1',
-                trabajador_foto_perfil: '1'//trabajador_foto_perfil
+                trabajador_comuna: trabajador_Com,
+                trabajador_ciudad: trabajador_ciudad,
+                trabajador_direccion: trabajador_direccion//trabajador_foto_perfil
             }
             console.log(JSON.stringify(newTrabajador))
             const response = await fetch("http://localhost:5000/Autenticar/RegistrarTrabajador", {

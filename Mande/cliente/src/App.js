@@ -34,7 +34,6 @@ function App() {
         headers: { token: localStorage.tokenUsuario }
       })
       const parseRES = await response.json();
-      console.log(localStorage.tokenUsuario)
       parseRES === true ? setUsuarioAutenticado(true) : setUsuarioAutenticado(false);
 
     } catch (error) {

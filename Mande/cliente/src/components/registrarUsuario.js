@@ -62,7 +62,7 @@ const RegistrarUsuario = ({ setAutUsuario }) => {
 
             if(parseRes.token){
                 localStorage.setItem('tokenUsuario', parseRes.token);
-                setAutUsuario(true);
+                console.log(parseRes.token);setAutUsuario(true);
                 toast.success('Registro exitoso')
 
             }
