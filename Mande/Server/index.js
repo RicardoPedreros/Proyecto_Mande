@@ -222,6 +222,7 @@ app.delete("/Labor/Delete", async (req, res) => {
 app.post("/Labor/ListarTrabajadores",async(req,res) =>{
     try {
         const body = req.body;
+        console.log(body);
         const celular = body.usuario_celular, labor = body.labor_id, distancia = body.distancia_maxima;
         const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
         res.json(trabajadores.rows);

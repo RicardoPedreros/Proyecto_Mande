@@ -19,7 +19,9 @@ const MostrarTrabajos = ({setContratando}) => {
             const parseRES = await response.json();
 
             setUsuario(parseRES.usuario_nombre);
-            localStorage.setItem('celular_usuario',parseRES.celular_usuario)
+            console.log(parseRES);
+            
+            localStorage.setItem('celular_usuario',parseRES.usuario_celular)
             localStorage.setItem('latitud_usuario',parseRES.usuario_latitud)
             localStorage.setItem('longitud_usuario',parseRES.usuario_longitud)
 

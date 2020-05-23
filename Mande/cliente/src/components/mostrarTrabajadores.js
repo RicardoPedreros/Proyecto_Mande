@@ -8,7 +8,7 @@ toast.configure();
 const MostrarTrabajadores = ({ setServ }) => {
     const [trabajadores, setTrabajadores] = useState([]);
     const labor_id = localStorage.getItem('labor_id')
-    const usuario_celular = localStorage.getItem('usuario_celular')
+    const usuario_celular = localStorage.getItem('celular_usuario')
 
     const NuevoServicio = async (trabajador_documento) => {
         localStorage.setItem('trabajador_documento',trabajador_documento);
@@ -48,7 +48,7 @@ const MostrarTrabajadores = ({ setServ }) => {
     useEffect(() => {
         getTrabajadores();
 
-    });
+    },[]);
 
     ; return (
         <Fragment>

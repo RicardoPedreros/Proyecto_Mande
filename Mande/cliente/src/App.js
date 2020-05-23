@@ -75,12 +75,12 @@ function App() {
 
   useEffect(() => {
     estaAutenticadoUsuario()
-  })
+  },[])
 
 
   useEffect(() => {
     estaAutenticadoTrabajador()
-  })
+  },[])
 
 
   return (

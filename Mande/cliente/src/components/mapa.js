@@ -15,7 +15,7 @@ function Map() {
   const [selectedTrabajador, setSelectedTrabajador] = useState(null);
   const [usuario, setUsuario] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
-  const usuario_celular = localStorage.getItem('usuario_celular')
+  const usuario_celular = localStorage.getItem('celular_usuario')
   const trabajador_documento = localStorage.getItem('trabajador_documento')
 
 
@@ -97,7 +97,6 @@ function Map() {
       }}
     >
       <Marker
-        key={usuario.usuario_celular}
         position={{
           lat: parseFloat(usuario.usuario_latitud),
           lng: parseFloat(usuario.usuario_longitud)
@@ -116,7 +115,6 @@ function Map() {
 
 
       <Marker
-        key={trabajador.trabajador_documento}
         position={{
           lat: parseFloat(trabajador.trabajador_latitud),
           lng: parseFloat(trabajador.trabajador_longitud)
