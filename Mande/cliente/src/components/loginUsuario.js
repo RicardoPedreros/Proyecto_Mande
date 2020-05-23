@@ -27,6 +27,7 @@ function LoginUsuario({setAutUsuario }) {
                 console.log(parseRES.token);
                 
                 localStorage.setItem("tokenUsuario", parseRES.token);
+                
                 toast.success('Loggeo exitoso');
                 setAutUsuario(true)
 

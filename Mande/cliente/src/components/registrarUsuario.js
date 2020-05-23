@@ -13,7 +13,6 @@ const RegistrarUsuario = ({ setAutUsuario }) => {
     const [usuario_celular, setUsuarioCelular] = useState("")
     const [usuario_documento, setUsuarioDocumento] = useState("")
     const [usuario_password1, setUsuarioPassword1] = useState("")
-    //const [usuario_password2, setUsuarioPassword2] = useState("")
     const [usuario_Car, setUsuarioCar] = useState("")
     const [usuario_CarN, setUsuarioCarN] = useState("")
     const [usuario_Dir2, setUsuarioDir2] = useState("")

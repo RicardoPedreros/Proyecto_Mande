@@ -10,6 +10,7 @@
     "react-google-maps": "^9.4.5",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
+    "react-star-ratings": "^2.3.0",
     "react-string-replace": "^0.4.4",
     "react-toastify": "^6.0.5"
   },
