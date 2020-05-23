@@ -47,29 +47,6 @@ app.post("/Labor/Create", async (req, res) => {
     }
 })
 
-//CREATE AN USUARIO
-app.post("/Usuario/Create", async (req, res) => {
-    try {
-        const body = req.body;
-        
-        const campos = '(usuario_celular,usuario_nombre,usuario_apellido,usuario_latitud,usuario_longitud,usuario_direccion,usuario_foto_recibo,usuario_numero_medio_pago,usuario_tipo_medio_pago,usuario_correo,usuario_documento,usuario_password)'
-        const nombre = body.usuario_nombre, apellido = body.usuario_apellido,correo = body.usuario_correo,celular = body.usuario_celular;
-        const direccion = body.usuario_direccion, documento = body.usuario_documento, password = body.usuario_password,latitud = body.usuario_latitud,longitud = body.usuario_longitud;
-        const pago = body.usuario_numero_medio_pago,tipo = body.usuario_tipo_medio_pago, foto = body.usuario_foto_recibo
-
-        
-        const newUsuario = await pool.query("INSERT INTO usuario" + campos +  " VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING *;",
-            [celular,nombre,apellido,latitud,longitud,direccion,foto,pago,tipo,correo,documento,password]);
-
-        res.json(newUsuario.rows[0]);
-
-
-    } catch (err) {
-        console.error(err.message);
-
-
-    }
-})
 
 
 //Get all Usuarios
@@ -159,6 +136,36 @@ app.get("/Labor/:id", async (req, res) => {
     }
 
 })
+//Get an User
+app.post("/InformacionUsuario", async (req, res) => {
+    try {
+        const {usuario_celular} = req.body;
+        const usuario = await pool.query("SELECT * FROM usuario WHERE usuario_celular = $1", [usuario_celular])
+
+        res.json(usuario);
+        
+    } catch (err) {
+        console.error(err.message);
+
+    }
+
+})
+//Get a trabajador
+app.post("/InformacionTrabajador", async (req, res) => {
+    try {
+        console.log('HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+        
+        const {trabajador_documento} = req.body;
+        const trabajador = await pool.query("SELECT * FROM trabajador WHERE trabajador_documento = $1", [trabajador_documento])
+
+        res.json(trabajador);
+        console.log(req.body);
+    } catch (err) {
+        console.error(err.message);
+
+    }
+
+})
 
 //Update a Labor
 app.put("/Labor/Edit", async (req, res) => {
@@ -210,6 +217,20 @@ app.delete("/Labor/Delete", async (req, res) => {
     }
 })
 
+//GET TRABAJADORES DISPONIBLES
+
+app.post("/Labor/ListarTrabajadores",async(req,res) =>{
+    try {
+        const body = req.body;
+        const celular = body.usuario_celular, labor = body.labor_id, distancia = body.distancia_maxima;
+        const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
+        res.json(trabajadores.rows);
+    } catch (error) {
+        console.error(error);
+        
+    }
+}
+)
 
 
 
