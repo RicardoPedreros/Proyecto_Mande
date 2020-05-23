@@ -194,23 +194,33 @@ const ApiKey = 'AIzaSyDtDvezVGJgaFMqa8FboBS4dcR6QKfnMyw';
 export default function Mapa() {
   return (
 
-    <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "1000vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
-      <div className="container p4 text-center">
+    <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "200vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
+      <div className="container p4 text-center">  
         <h1 style={{ color: "#a02e2e", }}><b>Solicitud de Servicio</b></h1>
-        <div className="mt-5 container   mb-4 bg-white rounded" style={{ width: "40vw", height: "80vh", border: "solid", borderBlockColor: "black", margin: "0 auto", borderRadius: "20" }} >
+        <div className="mt-5 container   mb-4 bg-white rounded" style={{ width: "40vw", height: "150vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
           <div className="text-left">
-          <h5 className="mt-4 ">Descripción:</h5>
+          <h5 className="ml-4 mt-4 ">Descripción:</h5>
           </div>
           <div className="text-center">
-            <input style={{ width: "30vw", height: "10vh" ,margin: "0 auto"}} type="text" name="Descripcion" className="form-control mt-2 " />
+            <input style={{ width: "35vw", height: "10vh" ,margin: "0 auto",border: "solid", borderBlockColor: "black",}} type="text" name="Descripcion" className="form-control mt-2 " />
           </div>
           <MapWrapped
 
             googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
             loadingElement={<p>   Cargando </p>}
             containerElement={<div className="mt-5" style={{ width: "400px", height: `200px`, margin: "0 auto" }} />}
-            mapElement={<div style={{ height: `200%`, margin: "0 auto" }} />}
+            mapElement={<div style={{ height: `200%`, margin: "0 auto" ,border: "solid", borderBlockColor: "black", }} />}
+          
           />
+
+            <div className="text-center">
+            <button  style={{position:"absolute" ,left:"550px",top:"700px" }}className="btn btn-success mt-5">Contratar</button>
+          </div>
+          <div className="text-center">
+            <button  style={{position:"absolute" ,left:"700px",top:"700px" }}className="btn btn-danger mt-5">Cancelar</button>
+          </div>
+
+        
 
 
 
