@@ -6,9 +6,10 @@ import App from './App';
 //Browser router
 
 import {BrowserRouter} from 'react-router-dom';
+import StarRating from './components/starRating';
 ReactDOM.render(<BrowserRouter>
   <React.StrictMode>
-    
+    <StarRating />
     <App />
     
   </React.StrictMode>
