@@ -8,6 +8,12 @@ import {
 } from "react-google-maps";
 
 
+const usuario_celular = localStorage.getItem('celular_usuario')
+const trabajador_documento = localStorage.getItem('trabajador_documento')
+const labor_id = localStorage.getItem('labor_id')
+
+
+
 
 function Map() {
 
@@ -15,8 +21,8 @@ function Map() {
   const [selectedTrabajador, setSelectedTrabajador] = useState(null);
   const [usuario, setUsuario] = useState([]);
   const [selectedUsuario, setSelectedUsuario] = useState(null);
-  const usuario_celular = localStorage.getItem('celular_usuario')
-  const trabajador_documento = localStorage.getItem('trabajador_documento')
+
+
 
 
 
@@ -191,42 +197,88 @@ const MapWrapped = withScriptjs(withGoogleMap(Map));
 
 const ApiKey = 'AIzaSyDtDvezVGJgaFMqa8FboBS4dcR6QKfnMyw';
 
-export default function Mapa() {
+export default function ServicioUsuario() {
+  const [descripcion, setDescripcion] = useState("")
+  const [disabledContratar, setDisabledContratar] = useState(false);
+
+
+  function deshabilitar_1() {
+    setDisabledContratar(!disabledContratar)
+  }
+  const Servicio = async () => {
+    try {
+      
+      const body = { usuario: usuario_celular, trabajador: trabajador_documento, labor: labor_id, descripcion: descripcion }
+      const response = await fetch("http://localhost:5000/Servicio",{
+        method: "POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(body)
+      })
+      console.log(body)
+      console.log(response);
+
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
+
+  const cancelarServicio = async() => {
+    try {
+      const body = {trabajador: trabajador_documento}
+      const response = await fetch("http://localhost:5000/ServicioCancelar",{
+        method: "POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify(body)
+      })
+      console.log(response);
+
+    } catch (err) {
+      console.log(err);
+
+    }
+
+  }
   return (
+    <form>
+      <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "200vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
+        <div className="container p4 text-center">
+          <h1 style={{ color: "#a02e2e", }}><b>Solicitud de Servicio</b></h1>
+          <div className="mt-5 container   mb-4 bg-white rounded" style={{ width: "40vw", height: "150vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
+            <div className="text-left">
+              <h5 className="ml-4 mt-4 ">Descripción:</h5>
+            </div>
+            <div className="text-center">
+              <input style={{ width: "35vw", height: "15vh", margin: "0 auto", border: "solid", borderBlockColor: "black", }} type="text" name="Descripcion" className="form-control mt-2 " onChange={e => setDescripcion(e.target.value)} required />
+            </div>
+            <MapWrapped
 
-    <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "200vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
-      <div className="container p4 text-center">  
-        <h1 style={{ color: "#a02e2e", }}><b>Solicitud de Servicio</b></h1>
-        <div className="mt-5 container   mb-4 bg-white rounded" style={{ width: "40vw", height: "150vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
-          <div className="text-left">
-          <h5 className="ml-4 mt-4 ">Descripción:</h5>
-          </div>
-          <div className="text-center">
-            <input style={{ width: "35vw", height: "10vh" ,margin: "0 auto",border: "solid", borderBlockColor: "black",}} type="text" name="Descripcion" className="form-control mt-2 " />
-          </div>
-          <MapWrapped
+              googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
+              loadingElement={<p>   Cargando </p>}
+              containerElement={<div className="mt-5" style={{ width: "400px", height: `200px`, margin: "0 auto" }} />}
+              mapElement={<div style={{ height: `200%`, margin: "0 auto", border: "solid", borderBlockColor: "black", }} />}
 
-            googleMapURL={`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=${ApiKey}`}
-            loadingElement={<p>   Cargando </p>}
-            containerElement={<div className="mt-5" style={{ width: "400px", height: `200px`, margin: "0 auto" }} />}
-            mapElement={<div style={{ height: `200%`, margin: "0 auto" ,border: "solid", borderBlockColor: "black", }} />}
-          
-          />
+            />
 
             <div className="text-center">
-            <button  style={{position:"absolute" ,left:"550px",top:"700px" }}className="btn btn-success mt-5">Contratar</button>
+              <button style={{ position: "absolute", left: "550px", top: "725px" }} className="btn btn-success mt-5"
+                 disabled={disabledContratar} 
+                onClick={e => { Servicio(); deshabilitar_1() }}
+              >Contratar</button>
+            </div>
+            <div className="text-center">
+              <button style={{ position: "absolute", left: "700px", top: "725px" }} className="btn btn-danger mt-5"
+              onClick={e=>{cancelarServicio()}}>Cancelar</button>
+            </div>
+
+
+
+
+
           </div>
-          <div className="text-center">
-            <button  style={{position:"absolute" ,left:"700px",top:"700px" }}className="btn btn-danger mt-5">Cancelar</button>
-          </div>
-
-        
-
-
 
         </div>
-
       </div>
-    </div>
+    </form>
   );
 }

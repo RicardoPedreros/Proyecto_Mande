@@ -18,6 +18,7 @@ const MostrarTrabajadores = ({ setServ }) => {
 
     async function getTrabajadores() {
         try {
+            
             const body = { labor_id: labor_id, usuario_celular: usuario_celular, distancia_maxima: 70000000 };
         
 

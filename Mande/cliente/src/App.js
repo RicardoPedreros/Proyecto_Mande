@@ -15,7 +15,7 @@ import ListLabores from './components/listLabor';
 import MostrarTrabajos from './components/mostrarTrabajos';
 import LoginTrabajador from './components/loginTrabajador';
 import MostrarTrabajadores from './components/mostrarTrabajadores';
-import Mapa from './components/mapa';
+import ServicioUsuario from './components/ServicioUsuario';
 
 
 function App() {
@@ -97,7 +97,7 @@ function App() {
                 <Redirect to="/ServicioUsuario" />)} />
 
             <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado) ? (
-              <Mapa{...props}  />) : (
+              <ServicioUsuario{...props}  />) : (
                 <Redirect to="/" />)} />
 
             <Route exact path="/ListarLabores" render={props => UsuarioAutenticado ? (

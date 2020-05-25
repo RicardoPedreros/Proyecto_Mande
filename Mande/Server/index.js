@@ -223,8 +223,8 @@ app.post("/Labor/ListarTrabajadores",async(req,res) =>{
     try {
         const body = req.body;
         console.log(body);
-        const celular = body.usuario_celular, labor = body.labor_id, distancia = body.distancia_maxima;
-        const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
+        
+        const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3,1)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
         res.json(trabajadores.rows);
     } catch (error) {
         console.error(error);
@@ -232,6 +232,34 @@ app.post("/Labor/ListarTrabajadores",async(req,res) =>{
     }
 }
 )
+
+//CREATE SERVICIO
+
+app.post("/Servicio",async(req,res)=>{
+    try {
+        const body = req.body
+        console.log(body);
+        const servicio = await pool.query("SELECT * FROM agregar_servicio($1,$2,$3,$4)",[body.usuario,body.trabajador,body.labor,body.descripcion])
+        res.json(servicio.rows)
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
+//CANCEL SERVICIO
+
+app.post("/ServicioCancelar",async(req,res)=>{
+    try {
+        const body = req.body
+        console.log(body);
+        const servicioCancelar = await pool.query("SELECT * FROM cancelar_servicio($1)",[body.trabajador])
+        res.json(servicioCancelar.rows)
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
 
 
 

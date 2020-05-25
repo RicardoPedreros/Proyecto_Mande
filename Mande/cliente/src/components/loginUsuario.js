@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 function LoginUsuario({setAutUsuario }) {
-
     const [usuario_celular, setUsuarioCelular] = useState("");
     const [usuario_password, setUsuarioPassword] = useState("");
     
