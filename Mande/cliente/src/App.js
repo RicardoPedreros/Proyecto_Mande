@@ -15,32 +15,40 @@ import ListLabores from './components/listLabor';
 import MostrarTrabajos from './components/mostrarTrabajos';
 import LoginTrabajador from './components/loginTrabajador';
 import MostrarTrabajadores from './components/mostrarTrabajadores';
-import TrabajadorInicio from './components/trabajadorInicio';
 import ServicioUsuario from './components/ServicioUsuario';
+import TrabajadorInicio from './components/trabajadorInicio';
+import StarRating from './components/starRating';
+import ServicioTrabajador from './components/servicioTrabajador';
+import { render } from 'react-dom';
 
 
 function App() {
   const [UsuarioAutenticado, setUsuarioAutenticado] = useState(false);
   const [TrabajadorAutenticado, setTrabajadorAutenticado] = useState(false);
   const [ContratandoTrabajador, setContratandoTrabajador] = useState(false);
+  const [servicioInfo, setServicioInfo] = useState([]);
+  const [TrabajadorContratado, setTrabajadorContratado] = useState(false);
   const [Servicio, setServicio] = useState(false);
+  const [ocupado,setOcupado] = useState(true);
+  
 
   const setServ = (boolean) => {
     setServicio(boolean);
   }
-
   const setContratando = (boolean) => {
     setContratandoTrabajador(boolean);
-
-
   }
-
   const setAutUsuario = (boolean) => {
     setUsuarioAutenticado(boolean);
   }
   const setAutTrabajador = (boolean) => {
     setTrabajadorAutenticado(boolean);
   }
+  const setServProps = (info) =>{
+    setServicioInfo(info);
+  }
+
+  
 
   async function estaAutenticadoUsuario() {
     try {
@@ -89,16 +97,15 @@ function App() {
       <Router>
         <div className="container">
           <Switch>
+          <Route exact path="/TrabajadorInicio" render={props => (TrabajadorAutenticado && !TrabajadorContratado) ? (
+                  <TrabajadorInicio{...props} setAutTrabajador={setAutTrabajador} setServProps={setServProps} setTrabajadorContratado={setTrabajadorContratado}/>) :
 
-          <Route
-              exact path="/TrabajadorInicio"
-              render={props => TrabajadorAutenticado ? (
-                  <TrabajadorInicio {...props} setAutTrabajador={setAutTrabajador}  />
-                ) : (
-                  <Redirect to="/loginTrabajador" />
-                )
+                  (<Redirect to = {{pathname : "/servicioTrabajador", servicioInfo:servicioInfo} }/>)
+                
               }
             />
+            <Route exact path = "/servicioTrabajador" render = {props => (TrabajadorContratado) ? (
+            <ServicioTrabajador{...props }setContratando={setContratando}  setTrabajadorContratado={setTrabajadorContratado}/> ) : (<Redirect to= "/TrabajadorInicio" />) } />
 
             <Route exact path="/EscogerLabor" render={props => (UsuarioAutenticado && !ContratandoTrabajador) ? (
               <MostrarTrabajos{...props} setContratando={setContratando} />) : (
@@ -106,11 +113,11 @@ function App() {
 
             <Route exact path="/EscogerTabajador" render={props => (UsuarioAutenticado && !Servicio) ? (
               <MostrarTrabajadores{...props} setServ={setServ} />) : (
-                <Redirect to="/ServicioUsuario" />)} />
+                <Redirect to="/ServicioUsuario" setContratando={setContratando}/>)} />
 
-            <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado) ? (
-              <ServicioUsuario{...props}  />) : (
-                <Redirect to="/" />)} />
+            <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado && ContratandoTrabajador) ? (
+              <ServicioUsuario{...props}  setContratando={setContratando}/>) : (
+                <Redirect to="/TrabajoTerminado" />)} />
 
             <Route exact path="/ListarLabores" render={props => UsuarioAutenticado ? (
               <ListLabores{...props} setAutUsuario={setAutUsuario} />) : (

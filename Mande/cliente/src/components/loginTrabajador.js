@@ -25,6 +25,9 @@ function LoginTrabajador({ setAutTrabajador }) {
 
             if (parseRES.token) {
                 localStorage.setItem("tokenTrabajador", parseRES.token);
+
+                localStorage.setItem('documento', trabajador_documento)
+                
                 toast.success('Loggeo exitoso');
                 setAutTrabajador(true)
 

@@ -205,17 +205,18 @@ export default function ServicioUsuario() {
   function deshabilitar_1() {
     setDisabledContratar(!disabledContratar)
   }
-  const Servicio = async () => {
+  const Servicio = async (e) => {
+    e.preventDefault(e)
     try {
       
+      
       const body = { usuario: usuario_celular, trabajador: trabajador_documento, labor: labor_id, descripcion: descripcion }
+      console.log(body);
       const response = await fetch("http://localhost:5000/Servicio",{
         method: "POST",
         headers:{"Content-Type":"application/json"},
         body: JSON.stringify(body)
       })
-      console.log(body)
-      console.log(response);
 
     } catch (err) {
       console.log(err);
@@ -223,7 +224,8 @@ export default function ServicioUsuario() {
     }
   }
 
-  const cancelarServicio = async() => {
+  const cancelarServicio = async(e) => {
+    e.preventDefault();
     try {
       const body = {trabajador: trabajador_documento}
       const response = await fetch("http://localhost:5000/ServicioCancelar",{
@@ -263,12 +265,12 @@ export default function ServicioUsuario() {
             <div className="text-center">
               <button style={{ position: "absolute", left: "550px", top: "725px" }} className="btn btn-success mt-5"
                  disabled={disabledContratar} 
-                onClick={e => { Servicio(); deshabilitar_1() }}
+                onClick={e => { Servicio(e); deshabilitar_1(e) }}
               >Contratar</button>
             </div>
             <div className="text-center">
               <button style={{ position: "absolute", left: "700px", top: "725px" }} className="btn btn-danger mt-5"
-              onClick={e=>{cancelarServicio()}}>Cancelar</button>
+              onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
             </div>
 
 

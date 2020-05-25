@@ -222,7 +222,6 @@ app.delete("/Labor/Delete", async (req, res) => {
 app.post("/Labor/ListarTrabajadores",async(req,res) =>{
     try {
         const body = req.body;
-        console.log(body);
         
         const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3,1)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
         res.json(trabajadores.rows);
@@ -239,6 +238,7 @@ app.post("/Servicio",async(req,res)=>{
     try {
         const body = req.body
         console.log(body);
+        
         const servicio = await pool.query("SELECT * FROM agregar_servicio($1,$2,$3,$4)",[body.usuario,body.trabajador,body.labor,body.descripcion])
         res.json(servicio.rows)
     } catch (error) {
@@ -252,9 +252,82 @@ app.post("/Servicio",async(req,res)=>{
 app.post("/ServicioCancelar",async(req,res)=>{
     try {
         const body = req.body
-        console.log(body);
         const servicioCancelar = await pool.query("SELECT * FROM cancelar_servicio($1)",[body.trabajador])
         res.json(servicioCancelar.rows)
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
+//TRABAJADOR OBTIENE UN SERVICIO
+
+app.post("/ServicioAsignado",async(req,res)=>{
+    console.log(req.body)
+    try {
+        const {documento} = req.body;
+
+        const servicioObtenido = await pool.query('SELECT * FROM servicio_contratado($1)',[documento])
+
+
+        res.json(servicioObtenido);
+        
+        
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
+//Llego Trabajado al servicio 
+app.post("/ServicioLlegada",async(req,res)=>{
+    console.log(req.body)
+    try {
+        const {documento} = req.body;
+
+        const ServicioLlegada = await pool.query('SELECT activar_servicio($1)',[documento])
+
+
+        res.json(ServicioLlegada);
+        
+        
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
+
+//Termino el servicio 
+app.post("/ServicioTerminado",async(req,res)=>{
+    console.log(req.body)
+    try {
+        const {documento,duracion} = req.body;
+
+        const ServicioTerminado = await pool.query('SELECT terminar_servicio($1,$2)',[documento,duracion])
+
+
+        res.json(ServicioTerminado);
+        
+        
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
+//Califico el servicio 
+app.post("/ServicioCalificado",async(req,res)=>{
+    console.log(req.body)
+    try {
+        const {usuario,trabajador,calificacion} = req.body;
+
+        const servicioCalificado = await pool.query('SELECT calificar_servicio($1,$2,$3)',[usuario,trabajador,calificacion])
+
+
+        res.json(servicioCalificado);
+        
+        
     } catch (error) {
         console.error(error);
         

@@ -13,6 +13,7 @@ DROP TRIGGER IF EXISTS tr_gestionar_servicio ON Servicio;
 DROP TRIGGER IF EXISTS tr_codificar_servicio ON Servicio;
 DROP TRIGGER IF EXISTS tr_codificar_labor ON Labor;
 
+DROP FUNCTION IF EXISTS servicio_contratado;
 DROP FUNCTION IF EXISTS activar_servicio;
 DROP FUNCTION IF EXISTS terminar_servicio;
 DROP FUNCTION IF EXISTS calificar_servicio;
@@ -84,7 +85,7 @@ CREATE TABLE Trabajador(
 	trabajador_foto_perfil 		VARCHAR(60)				NOT NULL,
 	trabajador_ocupado 			BOOLEAN					DEFAULT FALSE,
 	trabajador_validado 		BOOLEAN 				DEFAULT TRUE,
-	trabajador_password 		VARCHAR(32)				NOT NULL,
+	trabajador_password 		VARCHAR(60)				NOT NULL,
 	trabajador_reputacion		DECIMAL(2,1)			DEFAULT 0,
 	CONSTRAINT pk_trabajador PRIMARY KEY (trabajador_documento),
 	CONSTRAINT fk_trabajador FOREIGN KEY (trabajador_latitud,trabajador_longitud) 
@@ -128,7 +129,7 @@ CREATE TABLE Servicio(
 	servicio_costo 			INT,
 	servicio_calificacion 	SMALLINT,
 	servicio_descripcion 	VARCHAR(200) 	NOT NULL,
-	servicio_fecha_inicio 	VARCHAR(25)		NOT NULL,
+	servicio_fecha_inicio 	VARCHAR(25),
 	servicio_fecha_fin 		VARCHAR(25),
 	servicio_estado 		INT 			DEFAULT 1, -- ESTADOS: 0:Cancelado //1:En espera // 2:Activo // 3:finalizado // 4.Calificado
 	usuario_celular 		VARCHAR(20) 	NOT NULL,
@@ -185,7 +186,6 @@ BEGIN
 		RAISE EXCEPTION 'Trabajador no elegible';
 	END IF;
 	NEW.servicio_id := NEXTVAL('secuencia_servicio');
-	NEW.servicio_fecha_inicio := TO_CHAR(LOCALTIMESTAMP - INTERVAL '5 hours','YYYY-MM-DD HH24:MI:SS');
 	UPDATE Trabajador SET trabajador_ocupado = TRUE WHERE trabajador_documento = NEW.trabajador_documento; 
 	RETURN NEW;
 END
@@ -213,6 +213,12 @@ BEGIN
 		END IF;
 		IF (OLD.servicio_estado = 2 AND NEW.servicio_estado != 3) THEN
 			RAISE EXCEPTION 'No se permite este cambio de estado';
+		END IF;
+		IF(NEW.servicio_estado = 0) THEN
+			UPDATE Trabajador SET trabajador_ocupado = FALSE WHERE trabajador_documento = OLD.trabajador_documento;
+		END IF;
+		IF(NEW.servicio_estado = 2) THEN
+			NEW.servicio_fecha_inicio := TO_CHAR(LOCALTIMESTAMP - INTERVAL '5 hours','YYYY-MM-DD HH24:MI:SS');
 		END IF;
 		IF(NEW.servicio_estado = 3 ) THEN
 			IF (NEW.servicio_cantidad IS NULL) THEN
@@ -315,7 +321,7 @@ $$ LANGUAGE plpgsql;
 -- la longitud a unas que no estan registradas en la tabla Punto_Geografico
 CREATE FUNCTION modificar_trabajador(doc VARCHAR,nom VARCHAR,ape VARCHAR,fotdoc VARCHAR,
 								   fotperf VARCHAR,pass VARCHAR,lat DECIMAL, long DECIMAL,
-								   ciu VARCHAR,comu VARCHAR, dirc VARCHAR) 
+								   ciu VARCHAR,comu VARCHAR, dirc VARCHAR)
 RETURNS BOOLEAN AS $$
 DECLARE
 BEGIN
@@ -408,7 +414,7 @@ $$ LANGUAGE plpgsql;
 
 -- Funcion encargada de buscar los trabajadores activos y disponibles que realizan determinada labor 
 -- en una distancia maxima con respecto a un usuario 
-CREATE FUNCTION buscar_trabajadores(laborid INT, usuariocel VARCHAR, distmax INT, ordenapor INT) -- 1dista 2 puntos 3precio) 
+CREATE FUNCTION buscar_trabajadores(laborid INT, usuariocel VARCHAR, distmax DECIMAL, ordenapor INT) -- 1dista 2 reputacion 3 precio) 
 RETURNS TABLE (
 documento VARCHAR,
 nombre VARCHAR,
@@ -416,12 +422,13 @@ apellido VARCHAR,
 costo INT,
 tipo VARCHAR,
 reputacion DECIMAL,
-distancia DOUBLE PRECISION
+distancia DECIMAL
 ) AS $$
 DECLARE
 BEGIN
 IF (ordenapor = 1) THEN
-	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,tlr.t_r_l_tipo,tr.trabajador_reputacion,ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) AS distancia
+	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,
+	tlr.t_r_l_tipo,tr.trabajador_reputacion,ROUND(ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000,3) AS distancia
 		FROM trabajadores_realizan_labores AS tlr
 		INNER JOIN Labor AS l
 		ON tlr.labor_id = l.labor_id
@@ -441,10 +448,11 @@ IF (ordenapor = 1) THEN
 			AND u.usuario_longitud = pg2.pg_longitud
 			WHERE u.usuario_celular = usuariocel
 		) AS u
-		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) < distmax
+		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000 < distmax
 		ORDER BY distancia;
 ELSIF (ordenapor = 2) THEN
-	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,tlr.t_r_l_tipo,tr.trabajador_reputacion,ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) AS distancia
+	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,
+	tlr.t_r_l_tipo,tr.trabajador_reputacion,ROUND(ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000,3) AS distancia
 		FROM trabajadores_realizan_labores AS tlr
 		INNER JOIN Labor AS l
 		ON tlr.labor_id = l.labor_id
@@ -464,10 +472,11 @@ ELSIF (ordenapor = 2) THEN
 			AND u.usuario_longitud = pg2.pg_longitud
 			WHERE u.usuario_celular = usuariocel
 		) AS u
-		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) < distmax
+		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000 < distmax
 		ORDER BY tr.trabajador_reputacion DESC;
 ELSIF (ordenapor = 3) THEN
-	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,tlr.t_r_l_tipo,tr.trabajador_reputacion,ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) AS distancia
+	RETURN QUERY SELECT tr.trabajador_documento,tr.trabajador_nombre, tr.trabajador_apellido,tlr.t_r_l_precio,
+	tlr.t_r_l_tipo,tr.trabajador_reputacion,ROUND(ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000,3) AS distancia
 		FROM trabajadores_realizan_labores AS tlr
 		INNER JOIN Labor AS l
 		ON tlr.labor_id = l.labor_id
@@ -487,7 +496,7 @@ ELSIF (ordenapor = 3) THEN
 			AND u.usuario_longitud = pg2.pg_longitud
 			WHERE u.usuario_celular = usuariocel
 		) AS u
-		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion) < distmax
+		WHERE ST_Distance(pg1.pg_ubicacion,usuario_ubicacion)::NUMERIC/1000 < distmax
 		ORDER BY tlr.t_r_l_precio;
 ELSE
 	RAISE EXCEPTION 'Criterio de orden invalido';
@@ -590,7 +599,8 @@ BEGIN
 		res := FALSE;
 	ELSE
 		SELECT AVG(servicio_calificacion) INTO reputacion 
-		FROM Servicio WHERE trabajador_documento = trab_doc;
+		FROM Servicio WHERE trabajador_documento = trab_doc
+		AND servicio_estado = 4;
 		UPDATE Trabajador SET trabajador_reputacion = reputacion 
 		WHERE trabajador_documento = trab_doc;
 	END IF;
@@ -610,12 +620,43 @@ BEGIN
 	WHERE trabajador_documento = trab_doc
 	AND servicio_estado = 1;
 	UPDATE Servicio SET servicio_estado = 0 WHERE servicio_id = servicioid;
+
 	IF(servicioid IS NULL) THEN
 		res := FALSE;
 	END IF;
 	RETURN res;
 	EXCEPTION WHEN OTHERS THEN	
 	RETURN FALSE;
+END
+$$ LANGUAGE plpgsql;
+
+
+CREATE FUNCTION servicio_contratado(trab_doc VARCHAR)
+RETURNS TABLE (
+usuario_latitud DECIMAL,
+usuario_longitud DECIMAL,
+usuario_nombre_completo VARCHAR,
+trabajador_latitud DECIMAL,
+trabajador_longitud DECIMAL,
+labor_nombre VARCHAR,
+servicio_descripcion VARCHAR
+) AS $$
+DECLARE
+BEGIN
+	RETURN QUERY SELECT us.usuario_latitud,us.usuario_longitud,CONCAT(us.usuario_nombre,' ',us.usuario_apellido)::VARCHAR,
+	tr.trabajador_latitud,tr.trabajador_longitud,l.labor_nombre, s.servicio_descripcion
+	FROM Servicio AS s
+	INNER JOIN Usuario AS us
+	ON s.usuario_celular = us.usuario_celular
+	AND servicio_estado = 1
+	AND s.trabajador_documento = trab_doc
+	INNER JOIN Trabajadores_realizan_Labores AS trl
+	ON s.trabajador_documento = trl.trabajador_documento
+	AND s.labor_id = trl.labor_id
+	INNER JOIN Trabajador AS tr
+	ON trl.trabajador_documento = tr.trabajador_documento
+	INNER JOIN Labor AS l
+	ON l.labor_id = trl.labor_id;
 END
 $$ LANGUAGE plpgsql;
 
@@ -712,7 +753,7 @@ LISTA DE LABORES A ESCOGER:
 SELECT * FROM Labor_Disponible;
 
 LISTA DE TRABAJADORES DISPONIBLES DE UNA LABOR ESPECÍFICA(Escogida de la vista anterior):
-SELECT buscar_trabajadores(...);
+SELECT * FROM buscar_trabajadores(...);
 
 CREAR UN SERVICIO CON UN TRABAJADOR:
 SELECT agregar_servicio(...);
@@ -722,17 +763,6 @@ LISTA SERVICIOS ACTIVOS:
 -- SELECT * FROM SERVICIO WHERE servicio_estado = 1 AND usuario_celular = usercel;
 
 -- PAGAR AUTOMATICAMENTE
-LISTA SERVICIOS A PAGAR:
--- SELECT * FROM SERVICIO WHERE servicio_estado = 2 AND usuario_celular = usercel; 
-
-NOTA: PARA PODER VOLVER A SOLICITAR UN SERVICIO CON UN TRABAJADOR DEBE CANCELAR LOS SERVICIOS QUE TENGA PENDIENTES
-DE PAGAR CON ÉL.
-
-NOTA 2: LUEGO DE SOLICITAR UN SERVICIO EL USUARIO DEBE ESPERAR A QUE EL TRABAJADOR DESDE SU APP FINALICE EL TRABAJO
-PARA PODER PAGARLO
-
-PAGAR SERVICIO:
-SELECT pagar_servicio(...);
 
 -- **************************************************************
 LINEA DE FUNCIONES TRABAJADOR
@@ -743,15 +773,17 @@ LISTA DE LABORES:
 SELECT * FROM Labor;
 
 ASOCIARSE A UNA LABOR:
-((¡¡¡FALTA FUNCION!!!))
-Podría hacerse por insert.
+(pendiente)
+
+ACTIVAR SERVICIO
 
 TERMINAR UN SERVICIO:
 SELECT terminar_servicio(...);
 
 CANCELAR SERVICIO:
-((FALTAAA))
+SELECT cancelar_servicio(...)
 
+-- **************************************************************
 SELECT tr.trabajador_documento, trabajador_nombre, trabajador_apellido, labor_id, labor_nombre,
 FROM Trabajador AS tr
 NATURAL JOIN
