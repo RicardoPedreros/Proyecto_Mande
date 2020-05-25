@@ -15,12 +15,8 @@ import ListLabores from './components/listLabor';
 import MostrarTrabajos from './components/mostrarTrabajos';
 import LoginTrabajador from './components/loginTrabajador';
 import MostrarTrabajadores from './components/mostrarTrabajadores';
-<<<<<<< HEAD
-import ServicioUsuario from './components/ServicioUsuario';
-=======
-import Mapa from './components/mapa';
 import TrabajadorInicio from './components/trabajadorInicio';
->>>>>>> 9b02e361e702405c93cce7afceb97367c9c93313
+import ServicioUsuario from './components/ServicioUsuario';
 
 
 function App() {
