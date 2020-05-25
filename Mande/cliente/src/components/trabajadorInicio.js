@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-
-const TrabajadorInicio = ({ setAuth }) => {
+const TrabajadorInicio = ({setAutTrabajador}) => {
   const [trabajadorNombre, setTrabajadorNombre] = useState("");
   
 
@@ -16,24 +16,24 @@ const TrabajadorInicio = ({ setAuth }) => {
       const parseData = await res.json();
       
       console.log(parseData);
-      setTrabajadorNombre(parseData.trabajador_nombre);
+      setTrabajadorNombre((parseData.trabajador_nombre).toUpperCase());
   
     } catch (err) {
       console.error(err.message);
     }
   };
-/*
+
   const logout = async e => {
     e.preventDefault();
     try {
-      localStorage.removeItem("token");
-      setAuth(false);
-      toast.success("Logout successfully");
+      localStorage.removeItem("tokenTrabajador");
+      setAutTrabajador(false);
+      toast.success("Cerró sesión como trabajador");
     } catch (err) {
       console.error(err.message);
     }
   };
-*/
+
   useEffect(() => {
     getTrabajador();
   }, []);
@@ -41,8 +41,10 @@ const TrabajadorInicio = ({ setAuth }) => {
   return (
     <div>
       <h1 className="mt-5">Trabajador Inicio</h1>
-      <h2>Bienvenido {trabajadorNombre}</h2>
-
+      <h2>Bienvenido  {trabajadorNombre}</h2>
+      <button onClick={e => logout(e)} className="btn btn-primary">
+        Cerrar sesión
+      </button>
     </div>
   );
 };

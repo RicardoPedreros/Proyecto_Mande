@@ -91,11 +91,9 @@ function App() {
           <Switch>
 
           <Route
-              exact
-              path="/TrabajadorInicio"
-              render={props =>
-                TrabajadorAutenticado ? (
-                  <TrabajadorInicio {...props}  />
+              exact path="/TrabajadorInicio"
+              render={props => TrabajadorAutenticado ? (
+                  <TrabajadorInicio {...props} setAutTrabajador={setAutTrabajador}  />
                 ) : (
                   <Redirect to="/loginTrabajador" />
                 )
