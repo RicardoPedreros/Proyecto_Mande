@@ -16,6 +16,7 @@ import MostrarTrabajos from './components/mostrarTrabajos';
 import LoginTrabajador from './components/loginTrabajador';
 import MostrarTrabajadores from './components/mostrarTrabajadores';
 import Mapa from './components/mapa';
+import TrabajadorInicio from './components/trabajadorInicio';
 
 
 function App() {
@@ -88,6 +89,19 @@ function App() {
       <Router>
         <div className="container">
           <Switch>
+
+          <Route
+              exact
+              path="/TrabajadorInicio"
+              render={props =>
+                TrabajadorAutenticado ? (
+                  <TrabajadorInicio {...props}  />
+                ) : (
+                  <Redirect to="/loginTrabajador" />
+                )
+              }
+            />
+
             <Route exact path="/EscogerLabor" render={props => (UsuarioAutenticado && !ContratandoTrabajador) ? (
               <MostrarTrabajos{...props} setContratando={setContratando} />) : (
                 <Redirect to="/EscogerTabajador" />)} />
@@ -123,6 +137,8 @@ function App() {
             <Route exact path="/loginTrabajador" render={props => (!UsuarioAutenticado && !TrabajadorAutenticado) ? (
               <LoginTrabajador{...props} setAutTrabajador={setAutTrabajador} />) :
               TrabajadorAutenticado ? (<Redirect to="/TrabajadorInicio" />) : (<Redirect to="/EscogerLabor" />)} />
+
+
           </Switch>
 
         </div>

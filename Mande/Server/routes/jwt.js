@@ -7,6 +7,23 @@ const validacion = require('../middleware/validaciones');
 const autorizacionUsuario = require('../middleware/autorizacionUsuario');
 const autorizacionTrabajador = require('../middleware/autorizacionTrabajador')
 
+//Trabajador Inicio
+router.post("/TrabajadorInicio", autorizacionTrabajador, async (req, res) => {
+    try {
+      const trabajador = await pool.query(
+        "SELECT * FROM trabajador WHERE trabajador_documento = $1",
+        [req.user] 
+      ); 
+      
+      res.json(trabajador.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  });
+
+
+//MostrarInscritas
 router.get("/MostrarInscritas", autorizacionUsuario, async (req, res) => {
 
     try {
