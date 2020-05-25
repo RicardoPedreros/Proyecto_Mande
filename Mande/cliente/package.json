@@ -8,6 +8,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-maps": "^9.4.5",
+    "react-images-upload": "^1.2.8",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
     "react-star-ratings": "^2.3.0",

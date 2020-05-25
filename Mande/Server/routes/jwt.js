@@ -142,6 +142,7 @@ router.post('/RegistrarTrabajador', async (req, res) => {
         const bcryptpassword = await bcrypt.hash(password, Salt);
 
         /////////////////////////////////////////
+        console.log( [documento, nombre, apellido, foto_documento, foto_perfil, bcryptpassword, latitud, longitud, ciudad,comuna,direccion])
         const newTrabajador = await pool.query("SELECT agregar_trabajador($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);",
             [documento, nombre, apellido, foto_documento, foto_perfil, bcryptpassword, latitud, longitud, ciudad,comuna,direccion]);
 
@@ -173,6 +174,8 @@ router.post('/RegistrarTrabajador', async (req, res) => {
 router.post('/LoginTrabajador', async (req, res) => {
     try {
 
+        console.log(req.body);
+        
         const { trabajador_documento, trabajador_password } = req.body;
 
 

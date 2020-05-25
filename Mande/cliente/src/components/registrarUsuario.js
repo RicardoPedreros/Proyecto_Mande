@@ -5,7 +5,7 @@ import {toast} from 'react-toastify';
 
 
 
-const RegistrarUsuario = ({ setAutUsuario }) => {
+const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
     
     const [usuario_nombre, setUsuarioNombre] = useState("")
     const [usuario_apellido, setUsuarioApellido] = useState("")
