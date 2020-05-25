@@ -76,7 +76,7 @@ function LoginUsuario({setAutUsuario }) {
 
                                 <div className="col mt-3 text-center">
 
-                                    <button type="button" className="btn btn-primary" onClick={(e) => { onSubmmitForm(e) }}>Ingresar</button>
+                                    <button type="button" className="btn btn-warning" onClick={(e) => { onSubmmitForm(e) }}>Ingresar</button>
 
                                 </div>
                                 <div className="col mt-3 text-center">
