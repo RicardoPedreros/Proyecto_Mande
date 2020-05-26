@@ -212,7 +212,7 @@ export default function ServicioUsuario({setContratando,setServ}) {
       
       
       const body = { usuario: usuario_celular, trabajador: trabajador_documento, labor: labor_id, descripcion: descripcion }
-      console.log(body);
+      
       const response = await fetch("http://localhost:5000/Servicio",{
         method: "POST",
         headers:{"Content-Type":"application/json"},
@@ -279,7 +279,7 @@ export default function ServicioUsuario({setContratando,setServ}) {
               onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
             </div>
             <div className="text-center">
-              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>{setContratando(false);
+              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>{ localStorage.removeItem('trabajador_documento'); setContratando(false);
                   setServ(false)}} className="btn btn-warning mt-5"
               >Inicio</button></Link>
             </div>

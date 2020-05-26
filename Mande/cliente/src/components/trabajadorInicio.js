@@ -86,15 +86,10 @@ const TrabajadorInicio = ({ setAutTrabajador, setServProps, setTrabajadorContrat
     }
   }
 
-
-  useEffect(() => {
-    tieneTrabajo();
-  })
-
   useEffect(() => {
     getTrabajador();
 
-  });
+  },[]);
 
   return (
     <div>
@@ -106,6 +101,9 @@ const TrabajadorInicio = ({ setAutTrabajador, setServProps, setTrabajadorContrat
 
       <button onClick={e => logout(e)} className="btn btn-primary">
         Cerrar sesión
+      </button>
+      <button onClick={e => tieneTrabajo(e)} className="btn btn-primary ml-2">
+        ConsultarTrabajos
       </button>
     </div>
   );
