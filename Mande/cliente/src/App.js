@@ -20,6 +20,8 @@ import TrabajadorInicio from './components/trabajadorInicio';
 import UsuarioInicio from './components/usuarioInicio';
 import ServicioTrabajador from './components/servicioTrabajador';
 import CalificarServicios from './components/calificarServicios';
+import InscribirLabor from './components/Inscribirlabor';
+
 
 
 function App() {
@@ -97,6 +99,16 @@ function App() {
       <Router>
         <div className="container">
           <Switch>
+          <Route
+              exact path="/TrabajadorInscribirLabor"
+              render={props =>  TrabajadorAutenticado? (
+                  <InscribirLabor {...props}  />
+                ) : (
+                  <Redirect to="/loginTrabajador" />
+                )
+              }
+            />
+            
           <Route
               exact path="/UsuarioInicio"
               render={props => UsuarioAutenticado ? (

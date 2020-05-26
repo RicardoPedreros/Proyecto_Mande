@@ -246,7 +246,37 @@ router.post("/UsuarioInicio", autorizacionUsuario, async (req, res) => {
       res.status(500).send("Server error");
     }
   });
+//Trabajador Inscribe labor
+router.post("/InscribirLaborTrabajador",autorizacionTrabajador,  async (req, res) => {
+    
+    try {
+        
+        console.log(req.body);
+        const{ laborID,laborTipo,laborPrecio} = req.body;
 
+        const laborInscrita = await pool.query(
+            "SELECT * FROM  Trabajadores_realizan_Labores WHERE trabajador_documento = $1 AND labor_id = $2",
+            [req.user, laborID]
+          );
+
+          if (laborInscrita.rows.length > 0) {
+            return res.status(401).json("Ya se encuentra inscrito en esta labor");
+          }
+      
+
+
+      const nuevaLaborInscrita = await pool.query(
+        "INSERT INTO Trabajadores_realizan_Labores (trabajador_documento,labor_id,t_r_l_precio,t_r_l_tipo) VALUES ($1, $2, $3, $4) RETURNING *",
+        [req.user, laborID, laborPrecio,laborTipo]
+      );
+  
+      
+      res.json(nuevaLaborInscrita.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error nah");
+    }
+  });
   
 module.exports = router;
 

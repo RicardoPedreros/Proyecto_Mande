@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StarRatings from 'react-star-ratings';
+import { Link, Redirect } from "react-router-dom";
 
 toast.configure();
 
@@ -63,11 +64,11 @@ const MostrarTrabajadores = ({ setServ }) => {
 
                     </div>
                     <div className="form-grop col-md-4">
-                        <button onClick={e=> getTrabajadores(2)} className="btn btn-warning"> Ordenar por Precio</button>
+                        <button onClick={e=> getTrabajadores(2)} className="btn btn-warning"> Ordenar por reputacion</button>
 
                     </div>
                     <div className="form-grop col-md-4">
-                        <button onClick={e=> getTrabajadores(3)} className="btn btn-warning"> Ordenar por tipo</button>
+                        <button onClick={e=> getTrabajadores(3)} className="btn btn-warning"> Ordenar por precio</button>
 
                     </div>
                 </div>
@@ -90,6 +91,7 @@ const MostrarTrabajadores = ({ setServ }) => {
                                     rating={parseFloat(trabajador.reputacion)}
                                     starDimension="30px"
                                     starSpacing="5px"
+                                    starRatedColor="black"
                                 /></td>
                                 <td>{trabajador.distancia} Km </td>
                                 <td>COP {trabajador.costo}</td>
@@ -99,6 +101,9 @@ const MostrarTrabajadores = ({ setServ }) => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="container p4 text-center">
+                <Link to = "/UsuarioInicio"><h2>Inicio</h2> </Link>
             </div>
         </Fragment>
     );

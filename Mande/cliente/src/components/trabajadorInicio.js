@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const TrabajadorInicio = ({ setAutTrabajador, setServProps, setTrabajadorContratado }) => {
   const [trabajadorNombre, setTrabajadorNombre] = useState("");
@@ -99,6 +100,9 @@ const TrabajadorInicio = ({ setAutTrabajador, setServProps, setTrabajadorContrat
     <div>
       <h1 className="mt-5">Trabajador Inicio</h1>
       <h2>Bienvenido  {trabajadorNombre}</h2>
+      <div className="col mt-3 text-left mb-3">
+         <Link to="/TrabajadorInscribirLabor">Inscribe tus labores</Link>
+        </div>
 
       <button onClick={e => logout(e)} className="btn btn-primary">
         Cerrar sesión

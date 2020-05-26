@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import StarRatings from 'react-star-ratings';
+import { Link } from "react-router-dom";
 
 toast.configure();
 
@@ -70,7 +71,7 @@ const CalificarServicios = ({ setServ }) => {
     ; return (
         <Fragment>
             <div className="container p4 text-center">
-                <h1>Escoge tu trabajador</h1>
+                <h1> Servicios a Calificar </h1>
                 {" "}
                 <table className="table mt-5 text-center">
                     <thead>
@@ -107,6 +108,9 @@ const CalificarServicios = ({ setServ }) => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="container p4 text-center">
+                <Link to = "/UsuarioInicio"><h2>Inicio</h2> </Link>
             </div>
         </Fragment>
     );
