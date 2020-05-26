@@ -235,7 +235,7 @@ app.post("/Labor/ListarTrabajadores",async(req,res) =>{
     try {
         const body = req.body;
         
-        const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3,1)",[body.labor_id,body.usuario_celular,body.distancia_maxima]);
+        const trabajadores = await pool.query("SELECT * FROM buscar_trabajadores($1,$2,$3,$4)",[body.labor_id,body.usuario_celular,body.distancia_maxima,body.parametro]);
         res.json(trabajadores.rows);
     } catch (error) {
         console.error(error);

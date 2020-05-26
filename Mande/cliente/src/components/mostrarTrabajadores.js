@@ -16,10 +16,10 @@ const MostrarTrabajadores = ({ setServ }) => {
     }
 
 
-    async function getTrabajadores() {
+    async function getTrabajadores(parametro) {
         try {
             
-            const body = { labor_id: labor_id, usuario_celular: usuario_celular, distancia_maxima: 70000000 };
+            const body = { labor_id: labor_id, usuario_celular: usuario_celular, distancia_maxima: 70000000,parametro};
         
 
             const response = await fetch("http://localhost:5000/Labor/ListarTrabajadores", {
@@ -49,7 +49,7 @@ const MostrarTrabajadores = ({ setServ }) => {
 
 
     useEffect(() => {
-        getTrabajadores();
+        getTrabajadores(1);
 
     },[]);
 
@@ -57,6 +57,20 @@ const MostrarTrabajadores = ({ setServ }) => {
         <Fragment>
             <div className="container p4 text-center">
                 <h1>Escoge tu trabajador</h1>
+                <div className="form-row">
+                    <div className="form-grop col-md-4">
+                        <button onClick={e=> getTrabajadores(1)} className="btn btn-warning"> Ordenar por distancia</button>
+
+                    </div>
+                    <div className="form-grop col-md-4">
+                        <button onClick={e=> getTrabajadores(2)} className="btn btn-warning"> Ordenar por Precio</button>
+
+                    </div>
+                    <div className="form-grop col-md-4">
+                        <button onClick={e=> getTrabajadores(3)} className="btn btn-warning"> Ordenar por tipo</button>
+
+                    </div>
+                </div>
                 {" "}
                 <table className="table mt-5 text-center">
                     <thead>
