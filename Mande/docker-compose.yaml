@@ -2,7 +2,7 @@ version: "3"
 
 services: 
     frontend:
-        build: /home/marcos/Proyecto_Mande/Mande/cliente
+        build: /home/cristian/Escritorio/Proyecto_Mande/Mande/cliente
         ports:
             - "3000:3000"
         environment: 
@@ -10,7 +10,7 @@ services:
         depends_on: 
             - backend
     backend:
-        build: /home/marcos/Proyecto_Mande/Mande/Server
+        build: /home/cristian/Escritorio/Proyecto_Mande/Mande/Server
         ports:
             - "5000:5000"
         depends_on:
@@ -24,4 +24,4 @@ services:
             POSTGRES_USER: "postgres"
             POSTGRES_PASSWORD: "11111"
         volumes:
-            - /home/marcos/Proyecto_Mande/Mande/BD:/docker-entrypoint-initdb.d
+            - /home/cristian/Escritorio/Proyecto_Mande/Mande/BD:/docker-entrypoint-initdb.d

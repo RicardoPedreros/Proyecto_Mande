@@ -198,7 +198,7 @@ const MapWrapped = withScriptjs(withGoogleMap(Map));
 
 const ApiKey = 'AIzaSyDtDvezVGJgaFMqa8FboBS4dcR6QKfnMyw';
 
-export default function ServicioUsuario({setContratando}) {
+export default function ServicioUsuario({setContratando,setServ}) {
   const [descripcion, setDescripcion] = useState("")
   const [disabledContratar, setDisabledContratar] = useState(false);
 
@@ -226,6 +226,9 @@ export default function ServicioUsuario({setContratando}) {
   }
 
   const cancelarServicio = async(e) => {
+    setContratando(false);
+    setServ(false);
+   
     e.preventDefault();
     try {
       const body = {trabajador: trabajador_documento}
@@ -276,7 +279,8 @@ export default function ServicioUsuario({setContratando}) {
               onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
             </div>
             <div className="text-center">
-              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>setContratando(false)} className="btn btn-warning mt-5"
+              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>{setContratando(false);
+                  setServ(false)}} className="btn btn-warning mt-5"
               >Inicio</button></Link>
             </div>
 

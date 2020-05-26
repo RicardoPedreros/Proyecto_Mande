@@ -147,7 +147,7 @@ function App() {
                 <Redirect to="/ServicioUsuario" setContratando={setContratando}/>)} />
 
             <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado && ContratandoTrabajador) ? (
-              <ServicioUsuario{...props}  setContratando={setContratando}/>) : (
+              <ServicioUsuario{...props} setServ={setServ}  setContratando={setContratando}/>) : (
                 <Redirect to="/UsuarioInicio" />)} />
 
             <Route exact path="/ListarLabores" render={props => UsuarioAutenticado ? (
@@ -162,7 +162,7 @@ function App() {
 
             <Route exact path="/RegistrarTrabajador" render={props => !TrabajadorAutenticado ? (
               <RegistrarTrabajador{...props} setAutTrabajador={setAutTrabajador} />) : (
-                <Redirect to="/listLabor" />)} />
+                <Redirect to="/TrabajadorInicio" />)} />
 
 
             <Route exact path="/loginUsuario" render={props => (!UsuarioAutenticado && !TrabajadorAutenticado && !ContratandoTrabajador) ? (
@@ -172,7 +172,7 @@ function App() {
 
             <Route exact path="/loginTrabajador" render={props => (!UsuarioAutenticado && !TrabajadorAutenticado) ? (
               <LoginTrabajador{...props} setAutTrabajador={setAutTrabajador} />) :
-              TrabajadorAutenticado ? (<Redirect to="/TrabajadorInicio" />) : (<Redirect to="/EscogerLabor" />)} />
+              TrabajadorAutenticado ? (<Redirect to="/TrabajadorInicio" />) : (<Redirect to="/UsuarioInicio" />)} />
 
 
           </Switch>
