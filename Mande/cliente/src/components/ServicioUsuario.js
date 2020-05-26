@@ -276,7 +276,7 @@ export default function ServicioUsuario({setContratando}) {
               onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
             </div>
             <div className="text-center">
-              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} className="btn btn-warning mt-5"
+              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>setContratando(false)} className="btn btn-warning mt-5"
               >Inicio</button></Link>
             </div>
 
