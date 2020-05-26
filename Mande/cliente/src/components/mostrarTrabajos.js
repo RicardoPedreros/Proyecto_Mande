@@ -76,13 +76,13 @@ const MostrarTrabajos = ({setContratando}) => {
                     <div className="d-flex justify-content-sm-center">
                         <form className="d-flex mt-5" >
                             {Labores.map(labor => (
-                                <div key={labor.labor_id} className="card w-50 mr-3 text-white bg-info mb-3 " >
+                                <div key={labor.labor_id} className="card w-50 mr-3 text-white bg-dark mb-3 " >
 
                                     <div className="card-body">
                                         <h5 className="card-title">{labor.labor_nombre}</h5>
                                         <p className="card-text">{labor.labor_descripcion}.</p>
-                                        <p style={{ color: 'black' }}> Trabajadores Disponibles : {labor.cantidad_trabajadores}</p>
-                                        <button type="button" className="btn btn-success" onClick={e => ListarTrabajadores(labor.labor_id, e)}>¡Seleccionar!</button>
+                                        <p style={{ color: 'white' }}> Trabajadores Disponibles : {labor.cantidad_trabajadores}</p>
+                                        <button type="button" className="btn btn-warning" onClick={e => ListarTrabajadores(labor.labor_id, e)}>¡Seleccionar!</button>
 
                                     </div>
                                 </div>

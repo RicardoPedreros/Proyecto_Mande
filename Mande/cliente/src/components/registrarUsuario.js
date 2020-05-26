@@ -1,18 +1,20 @@
 import React, { Fragment, useState } from "react";
 import { Link } from 'react-router-dom';
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 
 
 
-const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
-    
+const RegistrarUsuario = ({ setAutUsuario, noTerminado }) => {
+
     const [usuario_nombre, setUsuarioNombre] = useState("")
     const [usuario_apellido, setUsuarioApellido] = useState("")
     const [usuario_correo, setUsuarioCorreo] = useState("")
     const [usuario_celular, setUsuarioCelular] = useState("")
     const [usuario_documento, setUsuarioDocumento] = useState("")
     const [usuario_password1, setUsuarioPassword1] = useState("")
+    const [usuario_password2, setUsuarioPassword2] = useState("")
     const [usuario_Car, setUsuarioCar] = useState("")
     const [usuario_CarN, setUsuarioCarN] = useState("")
     const [usuario_Dir2, setUsuarioDir2] = useState("")
@@ -21,14 +23,20 @@ const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
     const [usuario_departamento, setUsuarioDepartamento] = useState("")
     const [LatLng, setLatLng] = useState("");
     const [usuario_numero_medio_pago, setUsuarioTarjeta] = useState("")
+    const [selectedFile, setSelectedFile] = useState(null)
 
 
     const onSubmmitForm = async e => {
 
-        e.preventDefault();
+        const data = new FormData();
+        data.append('file', selectedFile);
+        const img = await axios.post("http://localhost:5000/upload", data, {
+      // receive two    parameter endpoint url ,form data
+        });
+        console.log(img);
 
         try {
-            const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2 ;
+            const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2;
 
             const newUsuario = {
 
@@ -45,30 +53,32 @@ const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
                 usuario_longitud: LatLng.lng,
                 usuario_ciudad: usuario_ciudad,
                 usuario_comuna: usuario_Com,
-                usuario_direccion : usuario_direccion
-                
+                usuario_direccion: usuario_direccion
+
             }
             console.log(JSON.stringify(newUsuario));
-            
-            const response = await fetch("http://localhost:5000/Autenticar/RegistrarUsuario", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            if (usuario_password1 == usuario_password2) {
 
-                body: JSON.stringify(newUsuario)
-            });
+                const response = await fetch("http://localhost:5000/Autenticar/RegistrarUsuario", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
 
-            const parseRes = await response.json();
+                    body: JSON.stringify(newUsuario)
+                });
 
-            if(parseRes.token){
-                localStorage.setItem('tokenUsuario', parseRes.token);
-                console.log(parseRes.token);setAutUsuario(true);
-                toast.success('Registro exitoso')
+                const parseRes = await response.json();
 
+                if (parseRes.token) {
+                    localStorage.setItem('tokenUsuario', parseRes.token);
+                    console.log(parseRes.token); setAutUsuario(true);
+                    toast.success('Registro exitoso')
+
+                }
             }
             else {
-                
+                toast.error('Las contraseñas deben coincidir')
             }
-            
+
 
         } catch (err) {
             toast.error('Error: Este celular ya se encuentra registrado')
@@ -150,7 +160,7 @@ const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
 
                         <div className="form-group">
                             <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña"
-                                /*onChange={e => setUsuarioPassword2(e.target.value)}*/ />
+                                onChange={e => setUsuarioPassword2(e.target.value)} />
                         </div>
 
 
@@ -246,16 +256,8 @@ const RegistrarUsuario = ({ setAutUsuario,noTerminado }) => {
 
 
                             <div className="form-group">
-                                <div className="input-group">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="inputGroupFileAddon01">Subir</span>
-                                    </div>
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input" id="inputGroupFile01"
-                                            aria-describedby="inputGroupFileAddon01" />
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">Foto recibo</label>
-                                    </div>
-                                </div>
+                                <label for="ReciboServicios">ReciboServicios:</label>
+                                <input type="file" placeholder="Ingrese recibo" accept=".jpg , .png" onChange={e => setSelectedFile(e.target.files[0])} />
 
                             </div>
                             <div className="radio">

@@ -11,14 +11,14 @@ function jwtGeneratorUsuario (usuario_celular){
     }
     
     
-    return jwt.sign(payload,"usuario123",{expiresIn: 60*10})
+    return jwt.sign(payload,"usuario123",{expiresIn: 60*2})
 }
 
 function jwtGeneratorTrabajador (trabajador_documento){
     const payload = {
         trabajador: trabajador_documento
     }
-    return jwt.sign(payload,"trabajador123",{expiresIn: 60*10})
+    return jwt.sign(payload,"trabajador123",{expiresIn: 60*2})
 }
 
 

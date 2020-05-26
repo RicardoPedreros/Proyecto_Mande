@@ -231,4 +231,22 @@ router.get("/esta-verificado-trabajador", autorizacionTrabajador, async (req, re
     }
 })
 
+
+//Usuario Inicio
+router.post("/UsuarioInicio", autorizacionUsuario, async (req, res) => {
+    try {
+      const usuario = await pool.query(
+        "SELECT * FROM usuario WHERE usuario_celular = $1",
+        [req.user] 
+      ); 
+      
+      res.json(usuario.rows[0]);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  });
+
+  
 module.exports = router;
+

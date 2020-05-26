@@ -1,26 +1,41 @@
 import React, { Fragment, useState } from "react";
-import {toast} from 'react-toastify';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
-
-function RegistrarTrabajador({setAutTrabajador}) {
+function RegistrarTrabajador({ setAutTrabajador }) {
 
     const [trabajador_nombre, setTrabajadorNombre] = useState("")
     const [trabajador_apellido, setTrabajadorApellido] = useState("")
     const [trabajador_documento, setTrabajadorDocumento] = useState("")
     const [trabajador_password1, setTrabajadorPassword1] = useState("")
-    //const [trabajador_password2, setTrabajadorPassword2] = useState("")
+    const [trabajador_password2, setTrabajadorPassword2] = useState("")
     const [trabajador_Car, setTrabajadorCar] = useState("")
     const [trabajador_CarN, setTrabajadorCarN] = useState("")
     const [trabajador_Dir2, setTrabajadorDir2] = useState("")
     const [trabajador_Com, setTrabajadorCom] = useState("")
     const [trabajador_ciudad, setTrabajadorCiudad] = useState("")
     const [trabajador_departamento, setTrabajadorDepartamento] = useState("")
-    //const [trabajador_foto_perfil, SetTrabajadorFoto] = useState("")
+    const [foto_perfil, setSelectedFileFoto] = useState(null)
+    const [foto_documento, setSelectedFileDocumento] = useState(null)
     const [LatLng, setLatLng] = useState("");
 
     const onSubmmitForm = async e => {
 
         e.preventDefault();
+
+        const data1 = new FormData();
+        data1.append('file', foto_perfil);
+        const img1 = await axios.post("http://localhost:5000/upload", data1, {
+            // receive two    parameter endpoint url ,form data
+        });
+
+        const data2 = new FormData();
+        data2.append('file', foto_documento);
+        const img2 = await axios.post("http://localhost:5000/upload", data2, {
+            // receive two    parameter endpoint url ,form data
+        });
+
+
 
         try {
             const trabajador_direccion = trabajador_Car + " " + trabajador_CarN + " " + trabajador_Dir2;
@@ -39,25 +54,30 @@ function RegistrarTrabajador({setAutTrabajador}) {
                 trabajador_direccion: trabajador_direccion//trabajador_foto_perfil
             }
             console.log(JSON.stringify(newTrabajador))
-            const response = await fetch("http://localhost:5000/Autenticar/RegistrarTrabajador", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            if (trabajador_password1 == trabajador_password2) {
+                const response = await fetch("http://localhost:5000/Autenticar/RegistrarTrabajador", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
 
-                body: JSON.stringify(newTrabajador)
+                    body: JSON.stringify(newTrabajador)
 
-            });
-            const parseRes = await response.json();
+                });
+                const parseRes = await response.json();
 
-            if(parseRes.token){
-                localStorage.setItem('tokenTrabajador', parseRes.token);
-                setAutTrabajador(true);
-                toast.success('Registro exitoso')
+                if (parseRes.token) {
+                    localStorage.setItem('tokenTrabajador', parseRes.token);
+                    setAutTrabajador(true);
+                    toast.success('Registro exitoso')
+
+                }
+
 
             }
             else {
-                
+                toast.error('Las contraseñas deben ser iguales')
+
             }
-            
+
 
         } catch (err) {
             toast.error('Error: Este documento ya se encuentra registrado')
@@ -133,7 +153,7 @@ function RegistrarTrabajador({setAutTrabajador}) {
                         </div>
 
                         <div className="form-group">
-                            <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña" /* onChange={e => setTrabajadorPassword2(e.target.value)}*/
+                            <input type="password" name="repetircontraseña" className="form-control" placeholder="Repetir contraseña" onChange={e => setTrabajadorPassword2(e.target.value)}
                             />
                         </div>
 
@@ -196,7 +216,7 @@ function RegistrarTrabajador({setAutTrabajador}) {
                             <div className="form-row">
                                 <div className="form-group col-md-5">
                                     <label >Latitud:</label>
-                                    <input type="text"  disabled className="form-control" name="trabajador_latitud" value={LatLng.lat}
+                                    <input type="text" disabled className="form-control" name="trabajador_latitud" value={LatLng.lat}
                                     />
                                 </div>
                                 <div className="form-group col-md-5">
@@ -212,8 +232,8 @@ function RegistrarTrabajador({setAutTrabajador}) {
                                     <label data-toggle="tooltip" title="Es obligatorio que genere su latitud y longitud">
                                         <h8>importante <i className="fa fa-question-circle d-inline"></i></h8>
                                     </label>
-                                    <button className="btn btn-primary" onClick={e => getLatLng(e)}
-                                        >
+                                    <button className="btn btn-warning" onClick={e => getLatLng(e)}
+                                    >
                                         Obtener
                                 </button>
                                 </div>
@@ -230,32 +250,17 @@ function RegistrarTrabajador({setAutTrabajador}) {
 
 
                             <div className="form-group">
-                                <div className="input-group">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="inputGroupFileAddon01">Subir</span>
-                                    </div>
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input" id="inputGroupFile01"
-                                            aria-describedby="inputGroupFileAddon01" />
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">Foto Documento</label>
-                                    </div>
-
-                                </div>
+                                        <label for="FotoDocumento">DocumentoIdentidad:</label>
+                                        <input type="file" placeholder="Foto Documento" accept=".jpg , .png" onChange={e => setSelectedFileDocumento(e.target.files[0])} />
+                    
 
                             </div>
 
                             <div className="form-group">
-                                <div className="input-group">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="inputGroupFileAddon01">Subir</span>
-                                    </div>
-                                    <div className="custom-file">
-                                        <input type="file" className="custom-file-input" id="inputGroupFile01"
-                                            aria-describedby="inputGroupFileAddon01" />
-                                        <label className="custom-file-label" htmlFor="inputGroupFile01">Foto Trabajador</label>
-                                    </div>
+                                <label for="FotoServicios">Foto Perfil:</label>
+                                <input type="file" placeholder="Foto" accept=".jpg , .png" onChange={e => setSelectedFileFoto(e.target.files[0])} />
 
-                                </div>
+
 
                             </div>
                             <div className="radio">
@@ -267,7 +272,7 @@ function RegistrarTrabajador({setAutTrabajador}) {
 
                             <div className="form-row">
                                 <div className="col text-center"  >
-                                    <button type="button" className="btn btn-primary" onClick={onSubmmitForm}>
+                                    <button type="button" className="btn btn-warning" onClick={onSubmmitForm}>
                                         Registrarse </button>
                                 </div>
                             </div>
@@ -284,7 +289,7 @@ function RegistrarTrabajador({setAutTrabajador}) {
             </div>
         </div>
 
-        
+
 
 
 

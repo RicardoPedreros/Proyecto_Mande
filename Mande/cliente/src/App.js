@@ -17,6 +17,7 @@ import LoginTrabajador from './components/loginTrabajador';
 import MostrarTrabajadores from './components/mostrarTrabajadores';
 import ServicioUsuario from './components/ServicioUsuario';
 import TrabajadorInicio from './components/trabajadorInicio';
+import UsuarioInicio from './components/usuarioInicio';
 import StarRating from './components/starRating';
 import ServicioTrabajador from './components/servicioTrabajador';
 import { render } from 'react-dom';
@@ -97,6 +98,16 @@ function App() {
       <Router>
         <div className="container">
           <Switch>
+          <Route
+              exact path="/UsuarioInicio"
+              render={props => UsuarioAutenticado ? (
+                  <UsuarioInicio {...props} setAutUsuario={setAutUsuario}  />
+                ) : (
+                  <Redirect to="/loginUsuario" />
+                )
+              }
+            />
+
           <Route exact path="/TrabajadorInicio" render={props => (TrabajadorAutenticado && !TrabajadorContratado) ? (
                   <TrabajadorInicio{...props} setAutTrabajador={setAutTrabajador} setServProps={setServProps} setTrabajadorContratado={setTrabajadorContratado}/>) :
 
@@ -117,7 +128,7 @@ function App() {
 
             <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado && ContratandoTrabajador) ? (
               <ServicioUsuario{...props}  setContratando={setContratando}/>) : (
-                <Redirect to="/TrabajoTerminado" />)} />
+                <Redirect to="/UsuarioInicio" />)} />
 
             <Route exact path="/ListarLabores" render={props => UsuarioAutenticado ? (
               <ListLabores{...props} setAutUsuario={setAutUsuario} />) : (

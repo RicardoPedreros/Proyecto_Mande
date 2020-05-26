@@ -13,6 +13,8 @@ function StarRating() {
 
         }
         setRating(newRating)
+        console.log(newRating);
+        
 
     }
 

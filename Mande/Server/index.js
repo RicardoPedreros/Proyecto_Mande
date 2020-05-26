@@ -4,6 +4,18 @@ const cors = require("cors");
 const pool = require("./db");
 const bodyParser = require('body-parser');
 const Joi = require('joi');
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, __dirname+'/public')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + Date.now())
+    }
+  })
+  
+  var upload = multer({ storage: storage })
 
 //middleware
 
@@ -334,6 +346,20 @@ app.post("/ServicioCalificado",async(req,res)=>{
     }
 })
 
+//SUBIR ARCHIVO
+
+app.post('/upload', upload.single('file'), (req, res, next) => {
+    console.log("hola");
+    console.log(__dirname);
+    const file = req.file
+    if (!file) {
+      const error = new Error('Please upload a file')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+      res.send(file)
+  
+  });
 
 
 app.listen(5000, () => {

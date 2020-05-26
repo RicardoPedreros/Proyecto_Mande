@@ -36,6 +36,8 @@ const MostrarTrabajadores = ({ setServ }) => {
 
 
             setTrabajadores(jsonData);
+            console.log(jsonData);
+            
             }
 
 
@@ -56,7 +58,7 @@ const MostrarTrabajadores = ({ setServ }) => {
             <div className="container p4 text-center">
                 <h1>Escoge tu trabajador</h1>
                 {" "}
-                <table className="table table-striped mt-5 text-center">
+                <table className="table mt-5 text-center">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -71,14 +73,14 @@ const MostrarTrabajadores = ({ setServ }) => {
                             <tr key={trabajador.documento}>
                                 <td>{trabajador.nombre} {trabajador.apellido} </td>
                                 <td><StarRatings
-                                    rating={trabajador.puntuacion}
+                                    rating={parseFloat(trabajador.reputacion)}
                                     starDimension="30px"
                                     starSpacing="5px"
                                 /></td>
                                 <td>{trabajador.distancia} Km </td>
                                 <td>COP {trabajador.costo}</td>
 
-                                <td>  <button type="button" className="btn btn-success" onClick={e => NuevoServicio(trabajador.documento)}>¡Contratar!</button></td>
+                                <td>  <button type="button" className="btn btn-warning" onClick={e => NuevoServicio(trabajador.documento)}>¡Contratar!</button></td>
                             </tr>
                         ))}
                     </tbody>

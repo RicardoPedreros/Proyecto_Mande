@@ -4,7 +4,7 @@
 -- POSTGIS VERSION
 -- PostGIS 2.5
 -- ***********************************************************************************
--- ****************************BASE DE DATOS MANDE V5**********************************
+-- ****************************BASE DE DATOS MANDE V6**********************************
 DROP TRIGGER IF EXISTS tr_actualizar_usuario ON Usuario;
 DROP TRIGGER IF EXISTS tr_insertar_usuario ON Usuario;
 DROP TRIGGER IF EXISTS tr_actualizar_punto_geografico ON Punto_Geografico;
@@ -13,6 +13,8 @@ DROP TRIGGER IF EXISTS tr_gestionar_servicio ON Servicio;
 DROP TRIGGER IF EXISTS tr_codificar_servicio ON Servicio;
 DROP TRIGGER IF EXISTS tr_codificar_labor ON Labor;
 
+
+DROP FUNCTION IF EXISTS servicio_a_calificar; 
 DROP FUNCTION IF EXISTS servicio_contratado;
 DROP FUNCTION IF EXISTS activar_servicio;
 DROP FUNCTION IF EXISTS terminar_servicio;
@@ -158,6 +160,7 @@ SELECT l.labor_id,l.labor_nombre,l.labor_descripcion,COUNT(l.labor_id)
 	NATURAL JOIN Labor AS l
 	GROUP BY l.labor_id,l.labor_nombre,l.labor_descripcion
 	ORDER BY labor_nombre;
+
 -- ************************************************************************************
 
 -- ************************PROCEDIMIENTOS ALMACENADOS**********************************
@@ -660,6 +663,28 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
+
+CREATE FUNCTION servicio_a_calificar(usu_cel VARCHAR,trab_doc VARCHAR) RETURNS BOOLEAN AS $$
+DECLARE
+res BOOLEAN;
+cant INT;
+BEGIN
+	res := FALSE;
+	SELECT COUNT (*)
+	INTO cant 
+	FROM Servicio 
+	WHERE trabajador_documento = trab_doc 
+	AND usuario_celular = usu_cel 
+	AND servicio_estado = 3;
+	IF (cant > 0) THEN
+		res := TRUE;
+	END IF;
+	RETURN res;
+END
+$$ LANGUAGE plpgsql;
+
+
+
 -- ************************************************************************************
 -- ************************INSERTS PERMANENTES**********************************
 
@@ -679,22 +704,20 @@ INSERT INTO Labor (labor_nombre, labor_descripcion) VALUES
 
 -- ************************************************************************************
 -- ************************INSERTS DE PRUEBA**********************************
-SELECT agregar_trabajador('123','Juan','Caicedo','photodocs/123id.jpg','profileph/123.jpg','marcos123',
+SELECT agregar_trabajador('123','Juan','Caicedo','photodocs/123id.jpg','profileph/123.jpg','$2y$10$X0EdArqEsGKj681aamDJRuigbdP//oyfzorKNKAvPhvBAFfJ7LF92',
 							3.37565,-76.52976,'Cali','Comuna 17','Direccion1');
-SELECT agregar_trabajador('234','Danilo','Pascumal','photodocs/234id.jpg','profileph/234.jpg','cristian234',
+SELECT agregar_trabajador('234','Danilo','Pascumal','photodocs/234id.jpg','profileph/234.jpg','$2y$10$MFBZY8DHfemW/g1be/6l8euUd5zN8D8PqbCum2.FpLAmwb.wp8SQS',
 							3.37773,-76.5344,'Cali','Comuna 18','Direccion2');
-SELECT agregar_trabajador('345','Kevin','Loaiza','photodocs/345id.jpg','profileph/345.jpg','uribe345',
+SELECT agregar_trabajador('345','Kevin','Loaiza','photodocs/345id.jpg','profileph/345.jpg','$2y$10$fJdtVOMcSzTNLychobu6E.ZrTzrqm3vW0IgMlJOaQR0P58A2xXQ7W',
 							3.37167,-76.5338,'Cali','Comuna 12','Direccion3');
-SELECT agregar_trabajador('456','Ricardo','Pedreros','photodocs/456id.jpg','profileph/456.jpg','andres456',
+SELECT agregar_trabajador('456','Ricardo','Pedreros','photodocs/456id.jpg','profileph/456.jpg','$2y$10$nvcR9mXkirrBiBTZGOEi0.dk0jbtpA5832envU5M9Mo3tvaOdjUxu',
 							3.37595,-76.532765,'Cali','Comuna 2','Dir');
-SELECT agregar_trabajador('567','Pepe','Perez','photodocs/567id.jpg','profileph/567.jpg','ppp567',
+SELECT agregar_trabajador('567','Pepe','Perez','photodocs/567id.jpg','profileph/567.jpg','$2y$10$489SGiHkaci1CwSpKPI.t.kArexIgBNacUlFkA.xjfRjod.GTMrY.',
 							3.37508,-76.5371,'Cali','Comuna 3','ddd');
-SELECT agregar_trabajador('678','Cosme','Fulano','photodocs/678id.jpg','profileph/678.jpg','fulanito678',
+SELECT agregar_trabajador('678','Cosme','Fulano','photodocs/678id.jpg','profileph/678.jpg','$2y$10$C.W3QIP2I.fHssAPbDXqruIfvCckwJQGVRf/D5258RLSkRRgRe872',
 							3.379722,-76.53705,'Cali','Comuna 1','fsdsf');
-SELECT agregar_trabajador('789','Eddie','Salsa','photodocs/789id.jpg','profileph/789.jpg','salsa000',
+SELECT agregar_trabajador('789','Eddie','Salsa','photodocs/789id.jpg','profileph/789.jpg','$2y$10$/7f7P0mMiwbyOARv0heW1eAPpa1RRpgsigMQkiO79saVds/yAegW6',
 							3.371941,-76.53021,'Cali','Comuna 19','yyyyy');
-
-UPDATE Trabajador SET trabajador_validado = FALSE WHERE trabajador_documento = '789';
 /*LUGARES
 Ciencias Comp: 3.37565,-76.52976
 Herbario: 3.37773,-76.5344
@@ -704,6 +727,8 @@ Porteria Peatonal: 3.37508,-76.5371
 Servicio Medico Profesores: 3.379722,-76.53705
 Portería Coca-Cola: 3.371941,-76.53021
 */
+
+UPDATE Trabajador SET trabajador_validado = FALSE WHERE trabajador_documento = '789';
 
 INSERT INTO Trabajadores_realizan_Labores VALUES
 ('123',1,5000,'Horas'),
@@ -716,6 +741,7 @@ INSERT INTO Trabajadores_realizan_Labores VALUES
 ('456',6,6000,'Horas'),
 ('456',7,30000,'Horas'),
 ('678',8,6000,'Horas'),
+('678',6,3800,'Horas'),
 ('789',3,5200,'Metro cuadrado'),
 ('789',1,1300,'Horas'),
 ('789',2,2200,'Horas'),
@@ -729,14 +755,6 @@ SELECT agregar_usuario('316','Marcos','Mejia','photorec/316xxx.jpg','003','Credi
 							3.374206,-76.523103,'Cali','Comuna 2','dir3'); 
 SELECT agregar_usuario('304','Manuela','Giraldo','photorec/304xxx.jpg','0004','Debito','mg@mg.com','654','$2y$10$aO8ooidrhpMZQhH8Wld40ehbyqvTgoryzA.fDGMMTLV1igS0nwYCC',
 							3.373614,-76.5389,'Cali','Comuna 20','dir4');
-
-/*
-LOGINS'S DE PRUEBA
-321 -- perez
-311 -- pascu
-316 -- mejia
-304 -- Giraldo
-*/
 /*
 LUGARES
 Alkomprar:3.385, -76.53765
@@ -744,50 +762,28 @@ Pizzeria Sur: 3.36446, -76.53305
 Makro: 3.374206,-76.523103
 Oasis Unicentro: 3.373614,-76.5389
 */
--- *************************************************************************************************
-/* LINEA DE FUNCIONES USUARIO
-REGISTRO:
-SELECT agregar_usuario(...);
 
-LISTA DE LABORES A ESCOGER:
-SELECT * FROM Labor_Disponible;
+SELECT agregar_servicio('311','456',7,'Necesito chef para cena privada');
+SELECT activar_servicio('456');
+SELECT terminar_servicio('456',3);
+SELECT calificar_servicio('311','456',4);
 
-LISTA DE TRABAJADORES DISPONIBLES DE UNA LABOR ESPECÍFICA(Escogida de la vista anterior):
-SELECT * FROM buscar_trabajadores(...);
+SELECT agregar_servicio('304','678',8,'Necesito niñero para un día completo');
+SELECT activar_servicio('678');
+SELECT terminar_servicio('678',8);
+SELECT calificar_servicio('304','678',5);
 
-CREAR UN SERVICIO CON UN TRABAJADOR:
-SELECT agregar_servicio(...);
+SELECT agregar_servicio('316','234',4,'Necesito mantenimiento de un servidor');
+SELECT activar_servicio('234');
+SELECT terminar_servicio('234',5);
+SELECT calificar_servicio('316','234',3);
 
+SELECT agregar_servicio('321','456',6,'Necesito mesero para evento');
+SELECT activar_servicio('456');
+SELECT terminar_servicio('456',4);
+SELECT calificar_servicio('321','456',5);
 
-LISTA SERVICIOS ACTIVOS:
--- SELECT * FROM SERVICIO WHERE servicio_estado = 1 AND usuario_celular = usercel;
-
--- PAGAR AUTOMATICAMENTE
-
--- **************************************************************
-LINEA DE FUNCIONES TRABAJADOR
-REGISTRO:
-SELECT agregar_trabajador(...);
-
-LISTA DE LABORES:
-SELECT * FROM Labor;
-
-ASOCIARSE A UNA LABOR:
-(pendiente)
-
-ACTIVAR SERVICIO
-
-TERMINAR UN SERVICIO:
-SELECT terminar_servicio(...);
-
-CANCELAR SERVICIO:
-SELECT cancelar_servicio(...)
-
--- **************************************************************
-SELECT tr.trabajador_documento, trabajador_nombre, trabajador_apellido, labor_id, labor_nombre,
-FROM Trabajador AS tr
-NATURAL JOIN
-Trabajadores_realizan_Labores
-NATURAL JOIN
-Labor;
-*/
+SELECT agregar_servicio('321','234',6,'Necesito otro mesero para evento');
+SELECT activar_servicio('234');
+SELECT terminar_servicio('234',7);
+SELECT calificar_servicio('321','234',4);
