@@ -131,8 +131,7 @@ function App() {
 
           <Route exact path="/TrabajadorInicio" render={props => (TrabajadorAutenticado && !TrabajadorContratado) ? (
                   <TrabajadorInicio{...props} setAutTrabajador={setAutTrabajador} setServProps={setServProps} setTrabajadorContratado={setTrabajadorContratado}/>) :
-
-                  (<Redirect to = {{pathname : "/servicioTrabajador", servicioInfo:servicioInfo} }/>)
+                  !TrabajadorAutenticado ? <LoginTrabajador{...props} setAutTrabajador={setAutTrabajador} /> :(<Redirect to = {{pathname : "/servicioTrabajador", servicioInfo:servicioInfo} }/>)
                 
               }
             />
