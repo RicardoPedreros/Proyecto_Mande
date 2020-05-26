@@ -16,7 +16,7 @@ services:
         depends_on:
             - database
     database:
-        image: postgis/postgis
+        image: mdillon/postgis
         ports:
             - "5432:5432"
         environment: 
