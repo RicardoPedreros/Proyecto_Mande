@@ -6,22 +6,22 @@ import { Link, Redirect } from "react-router-dom";
 
 toast.configure();
 
-const MostrarTrabajadores = ({ setServ }) => {
+const MostrarTrabajadores = ({ setServ,setContratando }) => {
+
     const [trabajadores, setTrabajadores] = useState([]);
     const labor_id = localStorage.getItem('labor_id')
     const usuario_celular = localStorage.getItem('celular_usuario')
 
-    const NuevoServicio = async (trabajador_documento) => {
-        localStorage.setItem('trabajador_documento',trabajador_documento);
-        setServ(true);
-    }
+
+
+
 
 
     async function getTrabajadores(parametro) {
         try {
-            
-            const body = { labor_id: labor_id, usuario_celular: usuario_celular, distancia_maxima: 70000000,parametro};
-        
+
+            const body = { labor_id: labor_id, usuario_celular: usuario_celular, distancia_maxima: 70000000, parametro };
+
 
             const response = await fetch("http://localhost:5000/Labor/ListarTrabajadores", {
                 method: 'POST',
@@ -31,14 +31,13 @@ const MostrarTrabajadores = ({ setServ }) => {
             });
 
             const jsonData = await response.json();
-            
-            if (jsonData)
-            {
+
+            if (jsonData) {
 
 
-            setTrabajadores(jsonData);
-            console.log(jsonData);
-            
+                setTrabajadores(jsonData);
+                console.log(jsonData);
+
             }
 
 
@@ -52,7 +51,9 @@ const MostrarTrabajadores = ({ setServ }) => {
     useEffect(() => {
         getTrabajadores(1);
 
-    },[]);
+    }, []);
+
+
 
     ; return (
         <Fragment>
@@ -60,15 +61,15 @@ const MostrarTrabajadores = ({ setServ }) => {
                 <h1>Escoge tu trabajador</h1>
                 <div className="form-row">
                     <div className="form-grop col-md-4">
-                        <button onClick={e=> getTrabajadores(1)} className="btn btn-warning"> Ordenar por distancia</button>
+                        <button onClick={e => getTrabajadores(1)} className="btn btn-warning"> Ordenar por distancia</button>
 
                     </div>
                     <div className="form-grop col-md-4">
-                        <button onClick={e=> getTrabajadores(2)} className="btn btn-warning"> Ordenar por reputacion</button>
+                        <button onClick={e => getTrabajadores(2)} className="btn btn-warning"> Ordenar por reputacion</button>
 
                     </div>
                     <div className="form-grop col-md-4">
-                        <button onClick={e=> getTrabajadores(3)} className="btn btn-warning"> Ordenar por precio</button>
+                        <button onClick={e => getTrabajadores(3)} className="btn btn-warning"> Ordenar por precio</button>
 
                     </div>
                 </div>
@@ -96,14 +97,18 @@ const MostrarTrabajadores = ({ setServ }) => {
                                 <td>{trabajador.distancia} Km </td>
                                 <td>COP {trabajador.costo}</td>
 
-                                <td>  <button type="button" className="btn btn-warning" onClick={e => NuevoServicio(trabajador.documento)}>¡Contratar!</button></td>
+                                <td>  <button type="button" className="btn btn-warning" onClick={e => {
+                                    localStorage.removeItem('trabajador_documento');
+                                    localStorage.setItem('trabajador_documento', trabajador.documento);
+                                    setServ(true); 
+                                }}>¡Contratar!</button></td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
             <div className="container p4 text-center">
-                <Link to = "/UsuarioInicio"><h2>Inicio</h2> </Link>
+                <Link to="/UsuarioInicio"><button className= "btn btn-primary" onClick={e=>{setServ(false);setContratando(false)}}> Inicio</button> </Link>
             </div>
         </Fragment>
     );

@@ -9,9 +9,7 @@ import {
 import { toast } from 'react-toastify'
 
 
-const usuario_celular = localStorage.getItem('celular_usuario')
-const trabajador_documento = localStorage.getItem('documento')
-const labor_id = localStorage.getItem('labor_id')
+
 
 
 
@@ -94,7 +92,7 @@ export default function ServicioTrabajador({setTrabajadorContratado,setContratan
         e.preventDefault();
         setLlegada(!llegada)
 
-        const body = { documento: trabajador_documento }
+        const body = { documento: localStorage.getItem('documento') }
 
         const response = await fetch("http://localhost:5000/ServicioLlegada", {
             method: "POST",
@@ -114,7 +112,7 @@ export default function ServicioTrabajador({setTrabajadorContratado,setContratan
 
         setTrabajadorContratado(false);
 
-        const body = { documento: trabajador_documento, duracion: duracionServicio }
+        const body = { documento: localStorage.getItem('documento'), duracion: duracionServicio }
 
         const response = await fetch("http://localhost:5000/ServicioTerminado", {
             method: "POST",

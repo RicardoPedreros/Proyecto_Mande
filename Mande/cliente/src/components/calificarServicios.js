@@ -8,7 +8,7 @@ toast.configure();
 
 const CalificarServicios = ({ setServ }) => {
     const [servicios, setServicios] = useState([]);
-    const usuario_celular = localStorage.getItem('celular_usuario')
+    
     const [rating, setRating] = useState(5);
 
     function changeRating(newRating) {
@@ -23,7 +23,7 @@ const CalificarServicios = ({ setServ }) => {
     }
 
     async function Calificar(trabajador,servicio_id) {
-        const body = {usuario:usuario_celular,trabajador:trabajador,calificacion:rating};
+        const body = {usuario: localStorage.getItem('celular_usuario'),trabajador:trabajador,calificacion:rating};
         const response = await fetch("http://localhost:5000/ServicioCalificado", {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
@@ -42,7 +42,7 @@ const CalificarServicios = ({ setServ }) => {
         try {
 
 
-            const body = { usuario: usuario_celular };
+            const body = { usuario:  localStorage.getItem('celular_usuario') };
 
 
             const response = await fetch("http://localhost:5000/ServiciosPorCalificar", {

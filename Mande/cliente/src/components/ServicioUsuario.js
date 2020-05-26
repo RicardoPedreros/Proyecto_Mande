@@ -9,15 +9,13 @@ import {
 import { Link } from "react-router-dom";
 
 
-const usuario_celular = localStorage.getItem('celular_usuario')
-const trabajador_documento = localStorage.getItem('trabajador_documento')
-const labor_id = localStorage.getItem('labor_id')
+
+
 
 
 
 
 function Map() {
-
   const [trabajador, setTrabajador] = useState([]);
   const [selectedTrabajador, setSelectedTrabajador] = useState(null);
   const [usuario, setUsuario] = useState([]);
@@ -25,12 +23,9 @@ function Map() {
 
 
 
-
-
-
   const getTrabajador = async () => {
     try {
-      const body = { trabajador_documento: trabajador_documento }
+      const body = { trabajador_documento: localStorage.getItem('trabajador_documento') }
       const response = await fetch("http://localhost:5000/InformacionTrabajador", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -63,7 +58,7 @@ function Map() {
 
   const getUsuario = async () => {
     try {
-      const body = { usuario_celular: usuario_celular }
+      const body = { usuario_celular: localStorage.getItem('celular_usuario') }
       const response = await fetch("http://localhost:5000/informacionUsuario", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -198,7 +193,7 @@ const MapWrapped = withScriptjs(withGoogleMap(Map));
 
 const ApiKey = 'AIzaSyDtDvezVGJgaFMqa8FboBS4dcR6QKfnMyw';
 
-export default function ServicioUsuario({setContratando,setServ}) {
+export default function ServicioUsuario({ setContratando, setServ }) {
   const [descripcion, setDescripcion] = useState("")
   const [disabledContratar, setDisabledContratar] = useState(false);
 
@@ -209,13 +204,13 @@ export default function ServicioUsuario({setContratando,setServ}) {
   const Servicio = async (e) => {
     e.preventDefault(e)
     try {
-      
-      
-      const body = { usuario: usuario_celular, trabajador: trabajador_documento, labor: labor_id, descripcion: descripcion }
-      
-      const response = await fetch("http://localhost:5000/Servicio",{
+
+
+      const body = { usuario: localStorage.getItem('celular_usuario'), trabajador: localStorage.getItem('trabajador_documento'), labor: localStorage.getItem('labor_id'), descripcion: descripcion }
+
+      const response = await fetch("http://localhost:5000/Servicio", {
         method: "POST",
-        headers:{"Content-Type":"application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       })
 
@@ -225,16 +220,16 @@ export default function ServicioUsuario({setContratando,setServ}) {
     }
   }
 
-  const cancelarServicio = async(e) => {
+  const cancelarServicio = async (e) => {
     setContratando(false);
     setServ(false);
-   
+
     e.preventDefault();
     try {
-      const body = {trabajador: trabajador_documento}
-      const response = await fetch("http://localhost:5000/ServicioCancelar",{
+      const body = { trabajador:  localStorage.getItem('trabajador_documento') }
+      const response = await fetch("http://localhost:5000/ServicioCancelar", {
         method: "POST",
-        headers:{"Content-Type":"application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       })
       console.log(response);
@@ -246,7 +241,7 @@ export default function ServicioUsuario({setContratando,setServ}) {
 
   }
 
- 
+
   return (
     <form>
       <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "200vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
@@ -270,17 +265,19 @@ export default function ServicioUsuario({setContratando,setServ}) {
 
             <div className="text-center">
               <button style={{ position: "absolute", left: "550px", top: "725px" }} className="btn btn-success mt-5"
-                 disabled={disabledContratar} 
+                disabled={disabledContratar}
                 onClick={e => { Servicio(e); deshabilitar_1(e) }}
               >Contratar</button>
             </div>
             <div className="text-center">
               <button style={{ position: "absolute", left: "700px", top: "725px" }} className="btn btn-danger mt-5"
-              onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
+                onClick={e => { cancelarServicio(e) }}>Cancelar</button>
             </div>
             <div className="text-center">
-              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e=>{ localStorage.removeItem('trabajador_documento'); setContratando(false);
-                  setServ(false)}} className="btn btn-warning mt-5"
+              <Link to="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} onClick={e => {
+                localStorage.removeItem('trabajador_documento'); setContratando(false);
+                setServ(false)
+              }} className="btn btn-warning mt-5"
               >Inicio</button></Link>
             </div>
 

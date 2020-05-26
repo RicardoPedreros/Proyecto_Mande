@@ -143,7 +143,7 @@ function App() {
                 <Redirect to="/EscogerTabajador" />)} />
 
             <Route exact path="/EscogerTabajador" render={props => (UsuarioAutenticado && !Servicio) ? (
-              <MostrarTrabajadores{...props} setServ={setServ} />) : (
+              <MostrarTrabajadores{...props} setServ={setServ} setContratando={setContratando} />) : (
                 <Redirect to="/ServicioUsuario" setContratando={setContratando}/>)} />
 
             <Route exact path="/ServicioUsuario" render={props => (UsuarioAutenticado && ContratandoTrabajador) ? (

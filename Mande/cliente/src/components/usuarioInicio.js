@@ -3,12 +3,19 @@ import { toast } from "react-toastify";
 import { Link, Redirect } from "react-router-dom";
 import MostrarTrabajadores from "./mostrarTrabajadores";
 
+localStorage.removeItem('celular_usuario')
+localStorage.removeItem('trabajador_documento')
+localStorage.removeItem('labor_id')
 
 const UsuarioInicio = ({setAutUsuario}) => {
+  localStorage.removeItem('labor_id')
+  
   const [UsuarioNombre, setUsuarioNombre] = useState("");
   
 
   const getUsuario = async () => {
+
+
     try {
       const res = await fetch("http://localhost:5000/Autenticar/UsuarioInicio", {
         method: "POST",
