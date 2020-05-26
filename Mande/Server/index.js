@@ -275,7 +275,6 @@ app.post("/ServicioCancelar",async(req,res)=>{
 //TRABAJADOR OBTIENE UN SERVICIO
 
 app.post("/ServicioAsignado",async(req,res)=>{
-    console.log(req.body)
     try {
         const {documento} = req.body;
 
@@ -328,6 +327,18 @@ app.post("/ServicioTerminado",async(req,res)=>{
     }
 })
 
+app.post('/esta-pendiente',async(req,res)=>{
+    try {
+        
+        const {usuario,trabajador} = req.bodyM
+        const esta_pendiente = await pool.query('SELECT * from servicio_a_calificar($1,$2)',[usuario,trabajador])
+        res.json(esta_pendiente.rows[0].servicio_a_calificar);
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
 //Califico el servicio 
 app.post("/ServicioCalificado",async(req,res)=>{
     console.log(req.body)
@@ -346,10 +357,22 @@ app.post("/ServicioCalificado",async(req,res)=>{
     }
 })
 
+//CALIFICAR SERVICIOS
+app.post('/ServiciosPorCalificar',async(req,res)=>{
+    try {
+        const Servicios = await pool.query('SELECT * FROM servicios_por_calificar($1)',[req.body.usuario])
+
+        res.json(Servicios.rows)
+        
+    } catch (error) {
+        console.error(error);
+        
+    }
+})
+
 //SUBIR ARCHIVO
 
 app.post('/upload', upload.single('file'), (req, res, next) => {
-    console.log("hola");
     console.log(__dirname);
     const file = req.file
     if (!file) {

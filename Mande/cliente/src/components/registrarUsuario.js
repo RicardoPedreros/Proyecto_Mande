@@ -28,14 +28,14 @@ const RegistrarUsuario = ({ setAutUsuario, noTerminado }) => {
 
     const onSubmmitForm = async e => {
 
-        const data = new FormData();
-        data.append('file', selectedFile);
-        const img = await axios.post("http://localhost:5000/upload", data, {
-      // receive two    parameter endpoint url ,form data
-        });
-        console.log(img);
 
         try {
+            const data = new FormData();
+            data.append('file', selectedFile);
+            const img = await axios.post("http://localhost:5000/upload", data, {
+                // receive two    parameter endpoint url ,form data
+            });
+
             const usuario_direccion = usuario_Car + " " + usuario_CarN + " " + usuario_Dir2;
 
             const newUsuario = {

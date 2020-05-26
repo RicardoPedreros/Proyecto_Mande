@@ -48,7 +48,11 @@ const UsuarioInicio = ({setAutUsuario}) => {
       <button onClick={e => logout(e)} className="btn btn-primary">
         Cerrar sesión
       </button>
-      <button className="ml-2 btn btn-primary"> Contratar Servicio </button>
+      <Link to = "/EscogerLabor" ><button  className="ml-2 btn btn-primary"> Contratar Servicio </button></Link>
+      
+      <Link to = "/CalificarServicios" ><button  className="ml-2 btn btn-primary"> Calificar Servicios </button></Link>
+
+
     </div>
   );
 };

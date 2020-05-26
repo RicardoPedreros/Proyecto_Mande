@@ -6,6 +6,7 @@ import {
   Marker,
   InfoWindow
 } from "react-google-maps";
+import { Link } from "react-router-dom";
 
 
 const usuario_celular = localStorage.getItem('celular_usuario')
@@ -197,7 +198,7 @@ const MapWrapped = withScriptjs(withGoogleMap(Map));
 
 const ApiKey = 'AIzaSyDtDvezVGJgaFMqa8FboBS4dcR6QKfnMyw';
 
-export default function ServicioUsuario() {
+export default function ServicioUsuario({setContratando}) {
   const [descripcion, setDescripcion] = useState("")
   const [disabledContratar, setDisabledContratar] = useState(false);
 
@@ -241,6 +242,8 @@ export default function ServicioUsuario() {
     }
 
   }
+
+ 
   return (
     <form>
       <div className="container shadow-lg p-5 mb-4 bg-white rounded" style={{ width: "50vw", height: "200vh", border: "solid", borderBlockColor: "black", margin: "0 auto" }} >
@@ -272,7 +275,10 @@ export default function ServicioUsuario() {
               <button style={{ position: "absolute", left: "700px", top: "725px" }} className="btn btn-danger mt-5"
               onClick={e=>{cancelarServicio(e)}}>Cancelar</button>
             </div>
-
+            <div className="text-center">
+              <Link to ="/UsuarioInicio" ><button style={{ position: "absolute", left: "640px", top: "775px" }} className="btn btn-warning mt-5"
+              >Inicio</button></Link>
+            </div>
 
 
 

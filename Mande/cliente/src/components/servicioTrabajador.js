@@ -109,8 +109,10 @@ export default function ServicioTrabajador({setTrabajadorContratado,setContratan
 
 
     const TerminarServicio = async (e) => {
-        setContratando(false);
-        e.preventDefault(e)
+
+        e.preventDefault(e);
+
+        setTrabajadorContratado(false);
 
         const body = { documento: trabajador_documento, duracion: duracionServicio }
 
@@ -123,7 +125,6 @@ export default function ServicioTrabajador({setTrabajadorContratado,setContratan
         })
 
         console.log(response);
-        setTrabajadorContratado(false);
         toast.success('Trabajo Concluido')
    
 

@@ -18,9 +18,8 @@ import MostrarTrabajadores from './components/mostrarTrabajadores';
 import ServicioUsuario from './components/ServicioUsuario';
 import TrabajadorInicio from './components/trabajadorInicio';
 import UsuarioInicio from './components/usuarioInicio';
-import StarRating from './components/starRating';
 import ServicioTrabajador from './components/servicioTrabajador';
-import { render } from 'react-dom';
+import CalificarServicios from './components/calificarServicios';
 
 
 function App() {
@@ -107,6 +106,16 @@ function App() {
                 )
               }
             />
+            <Route
+              exact path="/CalificarServicios"
+              render={props => UsuarioAutenticado ? (
+                  <CalificarServicios {...props} setAutUsuario={setAutUsuario}  />
+                ) : (
+                  <Redirect to="/loginUsuario" />
+                )
+              }
+            />
+
 
           <Route exact path="/TrabajadorInicio" render={props => (TrabajadorAutenticado && !TrabajadorContratado) ? (
                   <TrabajadorInicio{...props} setAutTrabajador={setAutTrabajador} setServProps={setServProps} setTrabajadorContratado={setTrabajadorContratado}/>) :

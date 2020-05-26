@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
 
 toast.configure();
 
-const MostrarTrabajos = ({setContratando}) => {
+const MostrarTrabajos = ({ setContratando }) => {
     const [Labores, setLabores] = useState([]);
     const [usuario, setUsuario] = useState("");
 
@@ -20,10 +21,10 @@ const MostrarTrabajos = ({setContratando}) => {
 
             setUsuario(parseRES.usuario_nombre);
             console.log(parseRES);
-            
-            localStorage.setItem('celular_usuario',parseRES.usuario_celular)
-            localStorage.setItem('latitud_usuario',parseRES.usuario_latitud)
-            localStorage.setItem('longitud_usuario',parseRES.usuario_longitud)
+
+            localStorage.setItem('celular_usuario', parseRES.usuario_celular)
+            localStorage.setItem('latitud_usuario', parseRES.usuario_latitud)
+            localStorage.setItem('longitud_usuario', parseRES.usuario_longitud)
 
 
 
@@ -56,7 +57,7 @@ const MostrarTrabajos = ({setContratando}) => {
     };
     const ListarTrabajadores = async (labor_id) => {
         try {
-            localStorage.setItem('labor_id',labor_id);
+            localStorage.setItem('labor_id', labor_id);
             setContratando(true);
 
 
@@ -69,6 +70,10 @@ const MostrarTrabajos = ({setContratando}) => {
     return <Fragment>
         <div className="container p4">
             <h1>Que labor deseas contratar {usuario} ?</h1>
+            <div className="col text-left mt-5 ml-2 mb-2"  >
+                <Link to="/UsuarioInicio"> <button className="btn btn-warning"> Inicio</button> </Link>
+            </div>
+
 
             <div className="row">
                 <div className="container shadow-lg p-5 mb-4 bg-white rounded">
