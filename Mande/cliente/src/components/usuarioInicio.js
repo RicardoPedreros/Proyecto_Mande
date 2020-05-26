@@ -48,7 +48,7 @@ const UsuarioInicio = ({setAutUsuario}) => {
       <button onClick={e => logout(e)} className="btn btn-primary">
         Cerrar sesión
       </button>
-      <button className="ml-2 btn btn-primary"> Inscribir Trabajador </button>
+      <button className="ml-2 btn btn-primary"> Contratar Servicio </button>
     </div>
   );
 };
