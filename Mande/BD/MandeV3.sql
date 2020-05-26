@@ -683,7 +683,32 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-
+CREATE FUNCTION servicios_por_calificar(usu_cel VARCHAR)
+RETURNS TABLE (
+servicio_id INT,
+trabajador_documento VARCHAR,
+trabajador_nombre_completo VARCHAR,
+labor_nombre VARCHAR,
+servicio_costo INT
+) AS $$
+DECLARE
+BEGIN
+    RETURN QUERY SELECT s.servicio_id, tr.trabajador_documento, CONCAT(tr.trabajador_nombre,' ',tr.trabajador_apellido)::VARCHAR,
+    l.labor_nombre,s.servicio_costo
+    FROM Servicio AS s
+    INNER JOIN Usuario AS us
+    ON s.usuario_celular = us.usuario_celular
+    AND s.usuario_celular = usu_cel
+    AND servicio_estado = 3
+    INNER JOIN Trabajadores_realizan_Labores AS trl
+    ON s.trabajador_documento = trl.trabajador_documento
+    AND s.labor_id = trl.labor_id
+    INNER JOIN Trabajador AS tr
+    ON trl.trabajador_documento = tr.trabajador_documento
+    INNER JOIN Labor AS l
+    ON l.labor_id = trl.labor_id;
+END
+$$ LANGUAGE plpgsql;
 
 -- ************************************************************************************
 -- ************************INSERTS PERMANENTES**********************************
