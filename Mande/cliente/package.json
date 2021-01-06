@@ -4,7 +4,7 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-google-maps": "^9.4.5",
